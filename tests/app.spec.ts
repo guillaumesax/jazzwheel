@@ -12,11 +12,15 @@ test('manual selection, transposition, reload and browser navigation', async ({ 
   await page.getByRole('button', { name: /^Blue Bossa/ }).click();
   await page.getByRole('button', { name: 'OUVRIR LES GAMMES' }).click();
   await expect(page.getByRole('heading', { name: 'Blue Bossa', exact: true })).toBeVisible();
-  await expect(page.getByText('Db majeure', { exact: true })).toBeVisible();
-  await expect(page.getByText('D mineure', { exact: true })).toBeVisible();
+  await expect(page.getByText('Db majeur', { exact: true })).toBeVisible();
+  await expect(page.getByText('D mineur naturel', { exact: true })).toBeVisible();
   await noOverflow(page);
   await page.getByRole('button', { name: 'Afficher les dièses' }).click();
-  await expect(page.getByText('C# majeure', { exact: true })).toBeVisible();
+  await expect(page.getByText('C# majeur', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Grille d’accords' })).toBeVisible();
+  await expect(page.getByText('G7#9', { exact: true })).toHaveCount(2);
+  await page.getByRole('button', { name: 'Sib', exact: true }).click();
+  await expect(page.getByLabel('Grille pour instrument en si bémol')).toContainText('A7#9');
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Blue Bossa', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Afficher les dièses' })).toHaveAttribute('aria-pressed', 'true');

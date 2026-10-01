@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { getNoteIndex, transposeNote, formatScaleName } from '../utils/musicUtils';
+import { getNoteIndex, transposeNote, formatScaleName, scaleNotes, transposeChord } from '../utils/musicUtils';
 import { parseFilters, filterStandards } from '../utils/filters';
 import { rotationForIndex, indexAtPointer } from '../utils/wheelUtils';
 import { readStorage, writeStorage } from '../utils/storage';
 import { JAZZ_STANDARDS } from '../data/tunes';
+import { CHARTS } from '../data/charts';
 
 describe('transposition', () => {
   it.each([
@@ -20,6 +21,20 @@ describe('transposition', () => {
     expect(transposeNote('H', 2, 'auto')).toBe('H');
     expect(transposeNote('C', NaN, 'auto')).toBe('C');
     expect(formatScaleName('C', 'pentatonic minor')).toBe('C pentatonique mineure');
+    expect(formatScaleName('D', 'dorian')).toBe('D dorien');
+    expect(formatScaleName('F', 'mixolydian')).toBe('F mixolydien');
+  });
+  it('spells useful modes and altered scales with the correct pitches', () => {
+    expect(scaleNotes('D', 'dorian')).toEqual(['D', 'E', 'F', 'G', 'A', 'B', 'C']);
+    expect(scaleNotes('G', 'altered')).toEqual(['G', 'Ab', 'Bb', 'B', 'Db', 'Eb', 'F']);
+    expect(scaleNotes('Db', 'lydian dominant')).toEqual(['Db', 'Eb', 'F', 'G', 'Ab', 'Bb', 'Cb']);
+    expect(scaleNotes('C', 'blues')).toEqual(['C', 'Eb', 'F', 'Gb', 'G', 'Bb']);
+  });
+  it('transposes chart chords without changing chord qualities', () => {
+    expect(transposeChord('Cm7', 2)).toBe('Dm7');
+    expect(transposeChord('G7#9', 2)).toBe('A7#9');
+    expect(transposeChord('C6/E', 2)).toBe('D6/F#');
+    expect(transposeChord('F#m7b5', 2)).toBe('G#m7b5');
   });
 });
 
@@ -58,6 +73,7 @@ describe('wheel result', () => {
   it('has unique ids and valid notes in the imported repertoire', () => {
     expect(new Set(JAZZ_STANDARDS.map(item => item.id)).size).toBe(JAZZ_STANDARDS.length);
     for (const item of JAZZ_STANDARDS) {
+      expect(CHARTS[item.id.replace(/-chant$/, '')]?.bars.length).toBeGreaterThanOrEqual(12);
       expect(item.recommendedScales.length).toBeGreaterThan(0);
       for (const scale of item.recommendedScales) expect(getNoteIndex(scale.root)).toBeGreaterThanOrEqual(0);
     }

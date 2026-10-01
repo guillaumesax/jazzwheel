@@ -23,8 +23,47 @@ export const transposeNote = (root: string, semitones: number, pref: AccidentalP
 };
 
 const SCALE_LABELS: Record<ScaleRecommendation['type'], string> = {
-  major: 'majeure', minor: 'mineure', dorian: 'dorienne', mixolydian: 'mixolydienne',
+  major: 'majeur', minor: 'mineur naturel', dorian: 'dorien', mixolydian: 'mixolydien',
   blues: 'blues', 'pentatonic major': 'pentatonique majeure', 'pentatonic minor': 'pentatonique mineure',
+  locrian: 'locrien', 'phrygian dominant': 'phrygien dominant',
+  altered: 'altéré',
+  'lydian dominant': 'lydien dominant',
 };
 export const formatScaleName = (root: string, type: ScaleRecommendation['type']): string =>
-  `${root} ${SCALE_LABELS[type]}`;
+  `${root} ${SCALE_LABELS[type]}`.trim();
+
+type Degree = readonly [number, number];
+const SCALE_DEGREES: Record<ScaleRecommendation['type'], readonly Degree[]> = {
+  major: [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]],
+  minor: [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, -1], [7, -1]],
+  dorian: [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, 0], [7, -1]],
+  mixolydian: [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, -1]],
+  blues: [[1, 0], [3, -1], [4, 0], [5, -1], [5, 0], [7, -1]],
+  'pentatonic major': [[1, 0], [2, 0], [3, 0], [5, 0], [6, 0]],
+  'pentatonic minor': [[1, 0], [3, -1], [4, 0], [5, 0], [7, -1]],
+  locrian: [[1, 0], [2, -1], [3, -1], [4, 0], [5, -1], [6, -1], [7, -1]],
+  'phrygian dominant': [[1, 0], [2, -1], [3, 0], [4, 0], [5, 0], [6, -1], [7, -1]],
+  altered: [[1, 0], [2, -1], [3, -1], [3, 0], [5, -1], [6, -1], [7, -1]],
+  'lydian dominant': [[1, 0], [2, 0], [3, 0], [4, 1], [5, 0], [6, 0], [7, -1]],
+};
+const LETTERS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+const MAJOR_STEPS = [0, 2, 4, 5, 7, 9, 11];
+
+export function scaleNotes(root: string, type: ScaleRecommendation['type']): string[] {
+  const rootMatch = /^([A-G])([#b♯♭]?)$/.exec(root);
+  const rootPitch = getNoteIndex(root);
+  if (!rootMatch || rootPitch < 0) return [];
+  const rootLetter = LETTERS.indexOf(rootMatch[1]);
+  return SCALE_DEGREES[type].map(([degree, alteration]) => {
+    const letter = LETTERS[(rootLetter + degree - 1) % 7];
+    const target = (rootPitch + MAJOR_STEPS[degree - 1] + alteration + 12) % 12;
+    let difference = (target - NATURAL_NOTES[letter] + 12) % 12;
+    if (difference > 6) difference -= 12;
+    return letter + (difference === 0 ? '' : difference > 0 ? '#'.repeat(difference) : 'b'.repeat(-difference));
+  });
+}
+
+export function transposeChord(chord: string, semitones: number, pref: AccidentalPreference = 'auto'): string {
+  return chord.replace(/(^|\s|\/)([A-G](?:#|b)?)/g, (_, prefix: string, root: string) =>
+    prefix + transposeNote(root, semitones, pref === 'auto' && root.includes('#') ? '#' : pref));
+}

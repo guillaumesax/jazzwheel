@@ -2,7 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { JazzStandard, AccidentalPreference } from '../types';
 import { readStorage, writeStorage } from '../utils/storage';
-import { transposeNote, formatScaleName } from '../utils/musicUtils';
+import { transposeNote, formatScaleName, scaleNotes, transposeChord } from '../utils/musicUtils';
+import { CHARTS } from '../data/charts';
 
 interface ScalesPageProps {
   item: JazzStandard;
@@ -10,6 +11,10 @@ interface ScalesPageProps {
 }
 
 const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
+  const [chartPitch, setChartPitch] = useState<'concert' | 'bb' | 'eb'>('concert');
+  const variantShift = item.id === 'all-of-me-chant' ? -4 : item.id === 'summertime-chant' ? 2 : 0;
+  const chart = CHARTS[item.id.replace(/-chant$/, '')];
+  const instrumentShift = chartPitch === 'bb' ? 2 : chartPitch === 'eb' ? 9 : 0;
   const [pref, setPref] = useState<AccidentalPreference>(() => {
     const saved = readStorage('accidental_pref');
     return saved === '#' || saved === 'b' ? saved : 'auto';
@@ -70,6 +75,10 @@ const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
         </div>
       </header>
 
+      <p className="max-w-4xl mb-8 text-slate-300 leading-relaxed">
+        Les notes ci-dessous sont écrites pour chaque instrument. Une gamme indique les notes disponibles sur les accords cités, pas une consigne de la jouer du début à la fin : place d’abord les notes de l’accord sur les temps forts, puis relie-les avec les autres notes de la gamme. Sur une dominante, suis l’accord indiqué dans la grille.
+      </p>
+
       {/* LARGE SCALE GRID */}
       <main aria-label="Gammes et transpositions" className="flex-grow grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
         {item.recommendedScales.map((scale, idx) => {
@@ -88,7 +97,10 @@ const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
                 <h2 className="text-3xl sm:text-4xl md:text-5xl break-words font-black text-white tracking-tight">
                     {formatScaleName(concertRoot, scale.type)}
                 </h2>
-                <p className="text-indigo-300 italic text-sm font-bold mt-2 tracking-wide">"{scale.reason}"</p>
+                <p className="text-indigo-300 text-sm font-bold mt-2 tracking-wide">{scale.reason}</p>
+                <p className="text-white text-lg font-semibold mt-5 leading-relaxed" aria-label={`Notes de ${formatScaleName(concertRoot, scale.type)} : ${scaleNotes(concertRoot, scale.type).join(', ')}`}>
+                  {scaleNotes(concertRoot, scale.type).join(' · ')}
+                </p>
               </div>
 
               {/* Transposition Blocks - HUGE TEXT */}
@@ -102,8 +114,8 @@ const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
                    <div className="text-3xl sm:text-4xl break-words font-black text-white tracking-tighter">
                       {formatScaleName(bbRoot, scale.type)}
                    </div>
-                   <div className="text-slate-400 text-[10px] font-bold mt-4 uppercase tracking-widest truncate">
-                      {formatScaleName("", scale.type).trim()}
+                   <div className="text-slate-200 text-base font-semibold mt-4 leading-relaxed">
+                      {scaleNotes(bbRoot, scale.type).join(' · ')}
                    </div>
                 </div>
 
@@ -116,8 +128,8 @@ const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
                    <div className="text-3xl sm:text-4xl break-words font-black text-white tracking-tighter">
                       {formatScaleName(ebRoot, scale.type)}
                    </div>
-                   <div className="text-slate-400 text-[10px] font-bold mt-4 uppercase tracking-widest truncate">
-                      {formatScaleName("", scale.type).trim()}
+                   <div className="text-slate-200 text-base font-semibold mt-4 leading-relaxed">
+                      {scaleNotes(ebRoot, scale.type).join(' · ')}
                    </div>
                 </div>
               </div>
@@ -125,6 +137,31 @@ const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
           );
         })}
       </main>
+
+      {chart && <section aria-labelledby="chart-title" className="mb-10 bg-slate-800/60 border border-slate-700 rounded-[2rem] p-5 sm:p-8">
+        <div className="flex flex-wrap justify-between gap-5 items-start mb-6">
+          <div>
+            <h2 id="chart-title" className="text-3xl sm:text-4xl font-black">Grille d’accords</h2>
+            <p className="text-slate-300 mt-2">{chart.bars.length} mesures écrites{variantShift ? ' · version chant transposée' : ''}. {chart.note}</p>
+            <p className="text-slate-400 text-xs mt-2">Source : {chart.source}. Les reprises et variantes peuvent différer selon les éditions.</p>
+          </div>
+          <div role="group" aria-label="Tonalité de la grille" className="flex flex-wrap gap-2">
+            {([['concert', 'Concert'], ['bb', 'Sib'], ['eb', 'Mib']] as const).map(([value, label]) =>
+              <button key={value} type="button" aria-pressed={chartPitch === value} onClick={() => setChartPitch(value)}
+                className={`px-4 py-2 rounded-xl font-bold text-sm border ${chartPitch === value ? 'bg-indigo-600 border-indigo-400 text-white' : 'border-slate-600 text-slate-300 hover:bg-slate-700'}`}>
+                {label}
+              </button>)}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3" aria-label={`Grille pour ${chartPitch === 'concert' ? 'instrument en ut' : chartPitch === 'bb' ? 'instrument en si bémol' : 'instrument en mi bémol'}`}>
+          {chart.bars.map((bar, index) => <div key={index} className="min-h-24 rounded-xl border border-slate-600 bg-slate-900/70 p-3 sm:p-4 flex flex-col justify-between">
+            <span className="text-slate-400 text-xs font-bold">{index + 1}</span>
+            <span className="text-lg sm:text-xl font-bold break-words">{bar.split(' ').map((chord, chordIndex) =>
+              <React.Fragment key={chordIndex}>{chordIndex > 0 && <span className="text-slate-500 mx-2">·</span>}{transposeChord(chord, variantShift + instrumentShift, pref)}</React.Fragment>)}</span>
+          </div>)}
+        </div>
+        <p className="text-slate-400 text-sm mt-5">Une case = une mesure ; deux accords dans une case = deux demi-mesures. La grille est en sons réels par défaut. Les boutons Sib et Mib affichent les accords écrits pour saxophone.</p>
+      </section>}
 
       {/* Visual Footer */}
       <footer className="mt-auto pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400 font-black text-[10px] uppercase tracking-[0.4em]">

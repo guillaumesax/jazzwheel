@@ -1,0 +1,200 @@
+import type { ChordChart } from '../types';
+
+// Accord symbols only; no melody or scanned notation is included.
+export const CHARTS: Record<string, ChordChart> = {
+  "all-of-me": {
+    source: "Real Book C, vol. 1, p. 16 ; arrangement iReal Pro",
+    note: "Grille en sons réels ; chaque case représente une mesure.",
+    bars: [
+      "Cmaj7", "Cmaj7", "E7", "E7",
+      "A7", "A7", "Dm7", "Dm7",
+      "E7", "E7", "Am7", "Am7",
+      "D7", "D7", "Dm7", "G7",
+      "Cmaj7", "Cmaj7", "E7", "E7",
+      "A7", "A7", "Dm7", "Dm7",
+      "Fmaj7", "Fm6", "Em7", "A7",
+      "Dm7", "G7", "C6 Eb°7", "Dm7 G7",
+    ],
+  },
+  "autumn-leaves": {
+    source: "iReal Pro, bibliothèque locale ; Real Book C, vol. 1, p. 36 pour comparaison",
+    note: "Mi mineur ; reprise après la 8e mesure. Les dernières substitutions suivent iReal Pro.",
+    bars: [
+      "Am7", "D7", "Gmaj7", "Cmaj7",
+      "F#m7b5", "B7b9", "Em", "Em",
+      "F#m7b5", "B7b9", "Em", "Em",
+      "Am7", "D7", "Gmaj7", "Cmaj7",
+      "F#m7b5", "B7b9", "Em7 Ebm7", "Dm7 Db7",
+      "F#m7b5", "B7b9", "Em", "Em",
+    ],
+  },
+  "beautiful-love": {
+    source: "iReal Pro, bibliothèque locale ; Real Book C, vol. 1, p. 39 pour comparaison",
+    note: "Reprises et fins alternatives simplifiées dans l’ordre des mesures écrites.",
+    bars: [
+      "Em7b5", "A7b9", "Dm", "Dm",
+      "Gm7", "C7", "Fmaj7", "Em7b5 A7b9",
+      "Dm", "Gm7", "Bb7", "A7b9",
+      "Dm", "G7#11", "Em7b5", "A7b9",
+      "Dm", "Gm7", "Bb7", "A7b9",
+      "Dm B7", "Bb7#11 A7b9", "Dm", "Dm",
+    ],
+  },
+  "blue-bossa": {
+    source: "Real Book C, vol. 1, p. 51 ; arrangement iReal Pro",
+    note: "G7#9 suivant la feuille de corrections du Real Book.",
+    bars: [
+      "Cm7", "Cm7", "Fm7", "Fm7",
+      "Dm7b5", "G7#9", "Cm7", "Cm7",
+      "Ebm7", "Ab7", "Dbmaj7", "Dbmaj7",
+      "Dm7b5", "G7#9", "Cm7", "Dm7b5 G7#9",
+    ],
+  },
+  "bluesette": {
+    source: "Real Book C, vol. 1, p. 56 ; arrangement iReal Pro",
+    note: "Grille en sons réels ; chaque case représente une mesure.",
+    bars: [
+      "Bbmaj7", "Bbmaj7", "Am7b5", "D7b9",
+      "Gm7", "C7b9", "Fm7", "Bb7",
+      "Ebmaj7", "Ebmaj7", "Ebm7", "Ab7",
+      "Dbmaj7", "Dbmaj7", "C#m7", "F#7",
+      "Bmaj7", "Bmaj7", "Cm7", "F7",
+      "Dm7", "G7", "Cm7", "F7",
+    ],
+  },
+  "cantaloupe-island": {
+    source: "iReal Pro, bibliothèque locale",
+    note: "Grille en sons réels ; chaque case représente une mesure.",
+    bars: [
+      "Fm11", "Fm11", "Fm11", "Fm11",
+      "Db7#11", "Db7#11", "Db7#11", "Db7#11",
+      "Dm11", "Dm11", "Dm11", "Dm11",
+      "Fm11", "Fm11", "Fm11", "Fm11",
+    ],
+  },
+  "footprints": {
+    source: "iReal Pro, bibliothèque locale ; Real Book C, vol. 1, p. 157 pour comparaison",
+    note: "Arrangement iReal Pro à 24 mesures ; le Real Book présente une autre harmonisation.",
+    bars: [
+      "Cm11", "Cm11", "Cm11", "Cm11",
+      "Cm11", "Cm11", "Cm11", "Cm11",
+      "Fm11", "Fm11", "Fm11", "Fm11",
+      "Cm11", "Cm11", "Cm11", "Cm11",
+      "F#m7b5", "F7#11", "E7alt", "A7alt",
+      "Cm11", "Cm11", "Cm11", "Cm11",
+    ],
+  },
+  "maiden-voyage": {
+    source: "Real Book C, vol. 1, p. 281 ; arrangement iReal Pro",
+    note: "Accords suspendus du Real Book ; A (8 mesures), B (8), A (8).",
+    bars: [
+      "D7sus4", "D7sus4", "D7sus4", "D7sus4",
+      "F7sus4", "F7sus4", "F7sus4", "F7sus4",
+      "Eb7sus4", "Eb7sus4", "Eb7sus4", "Eb7sus4",
+      "Db7sus4", "Db7sus4", "Db7sus4", "Db7sus4",
+      "D7sus4", "D7sus4", "D7sus4", "D7sus4",
+      "F7sus4", "F7sus4", "F7sus4", "F7sus4",
+    ],
+  },
+  "mr-pc": {
+    source: "Real Book C, vol. 1, p. 305 ; arrangement iReal Pro",
+    note: "Grille en sons réels ; chaque case représente une mesure.",
+    bars: [
+      "Cm7", "Cm7", "Cm7", "Cm7",
+      "Fm7", "Fm7", "Cm7", "Cm7",
+      "Ab7", "G7b13", "Cm7", "Cm7",
+    ],
+  },
+  "nature-boy": {
+    source: "iReal Pro, bibliothèque locale",
+    note: "Grille en sons réels ; chaque case représente une mesure.",
+    bars: [
+      "Dm", "Em7b5 A7b9", "Dm", "Em7b5 A7b9",
+      "Dm Dm(maj7)", "Dm7 Dm6", "Gm6 Dm", "Em7b5",
+      "A7b9", "A7b9", "Dm", "Dm",
+      "E7b9", "E7b9", "A7b9", "A7b9",
+      "Dm", "Em7b5 A7b9", "Dm", "Em7b5 A7b9",
+      "Dm Dm(maj7)", "Dm7 Dm6", "Gm6 Dm", "Em7b5",
+      "A7b9", "A7b9", "Dm", "Bm7b5",
+      "E7b9", "A7b9", "Dm", "Em7b5 A7b9",
+    ],
+  },
+  "return-of-the-prodigal-son": {
+    source: "iReal Pro, bibliothèque locale",
+    note: "Version iReal Pro en do mineur avec reprises.",
+    bars: [
+      "Cm7 F7", "Cm7 F7", "Cm7 F7", "Cm7 F7",
+      "Cm7 F7", "Cm7 F7", "Cm7 F7", "Cm7 F7",
+      "Cm Bb", "Fm Gm", "Gm7 G", "Cm",
+      "Cm Bb", "Fm Gm", "Gm7 G", "Cm",
+      "Cm7 F7", "Cm7 F7", "Cm7 F7", "Cm7 F7",
+      "Gm7 G7", "Cm",
+    ],
+  },
+  "road-song": {
+    source: "iReal Pro, bibliothèque locale",
+    note: "Grille en sons réels ; chaque case représente une mesure.",
+    bars: [
+      "Gm7", "Gm7", "Am7b5", "D7b9",
+      "Gm7 Gm7", "Ebmaj7", "Em7b5 Cm7", "D7#9 Gm7",
+      "Cm7", "F7", "Bbmaj7", "Bm7 E7",
+      "Bbm7", "Eb7", "Abmaj7", "Am7 D7",
+      "Gm7", "Gm7", "Am7b5", "D7b9",
+      "Gm7 Gm7", "Ebmaj7", "Em7b5 Cm7", "D7#9 Gm7",
+    ],
+  },
+  "so-what": {
+    source: "Real Book C, vol. 1, p. 399 ; arrangement iReal Pro",
+    note: "A (16 mesures), B (8), A (8).",
+    bars: [
+      "Dm11", "Dm11", "Dm11", "Dm11",
+      "Dm11", "Dm11", "Dm11", "Dm11",
+      "Dm11", "Dm11", "Dm11", "Dm11",
+      "Dm11", "Dm11", "Dm11", "Dm11",
+      "Ebm11", "Ebm11", "Ebm11", "Ebm11",
+      "Ebm11", "Ebm11", "Ebm11", "Ebm11",
+      "Dm11", "Dm11", "Dm11", "Dm11",
+      "Dm11", "Dm11", "Dm11", "Dm11",
+    ],
+  },
+  "song-for-my-father": {
+    source: "iReal Pro, bibliothèque locale ; Real Book C, vol. 1, p. 394 pour comparaison",
+    note: "Forme écrite avec reprises et fins alternatives.",
+    bars: [
+      "Fm7", "Fm7", "Eb7", "Eb7",
+      "Db7", "C7sus4", "Fm7", "Fm7",
+      "Eb7", "Eb7", "Fm7", "Fm7",
+      "Eb7 Db7", "C7", "Fm7", "Fm7",
+    ],
+  },
+  "st-thomas": {
+    source: "iReal Pro, bibliothèque locale",
+    note: "Grille en sons réels ; chaque case représente une mesure.",
+    bars: [
+      "Cmaj7 F7", "Em7 A7", "Dm7 G7", "C6",
+      "Cmaj7 F7", "Em7 A7", "Dm7 G7", "C6",
+      "Em7b5", "A7b9", "Dm7", "G7",
+      "Cmaj7 C7", "Fmaj7 F#°7", "G7", "C6",
+    ],
+  },
+  "summertime": {
+    source: "iReal Pro, bibliothèque locale",
+    note: "Version en la mineur, transposée depuis la grille iReal Pro en ré mineur.",
+    bars: [
+      "Am7", "Am7 E7b13", "Am7", "Am7 A7b9",
+      "Dm7", "F7", "B7#5", "E7b9",
+      "Am7", "Am7 E7b13", "Am7", "D7 G7b9",
+      "Cmaj7 Am7", "Bm7b5 E7b13", "Am7", "Bm7b5 E7b13",
+    ],
+  },
+  "watermelon-man": {
+    source: "iReal Pro, bibliothèque locale",
+    note: "Grille en sons réels ; chaque case représente une mesure.",
+    bars: [
+      "F7#9", "F7#9", "F7#9", "F7#9",
+      "Bb9", "Bb9", "F7#9", "F7#9",
+      "C9", "Bb9", "C9", "Bb9",
+      "C9", "Bb9", "F7#9", "F7#9",
+    ],
+  },
+};

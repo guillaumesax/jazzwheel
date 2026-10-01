@@ -8,7 +8,8 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     recommendedScales: [
       { root: 'C', type: 'major', reason: 'Tonalité principale (I)' },
       { root: 'E', type: 'mixolydian', reason: 'Dominant secondaire (III7)' },
-      { root: 'A', type: 'mixolydian', reason: 'Dominant secondaire (VI7)' }
+      { root: 'A', type: 'mixolydian', reason: 'Dominant secondaire (VI7)' },
+      { root: 'D', type: 'dorian', reason: 'Sur Dm7 ; viser Fa et Do' }
     ]
   },
   {
@@ -17,7 +18,8 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     tags: { styles: ['Swing', 'Ballad'], tempo: 'Lent', complexity: 'plusieurs gammes' },
     recommendedScales: [
       { root: 'Ab', type: 'major', reason: 'Souvent chanté en Ab' },
-      { root: 'C', type: 'mixolydian', reason: 'Sur le III7' }
+      { root: 'C', type: 'phrygian dominant', reason: 'Sur C7b9, dominante de Fm' },
+      { root: 'Bb', type: 'dorian', reason: 'Sur Bbm7' }
     ]
   },
   {
@@ -27,7 +29,8 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     recommendedScales: [
       { root: 'G', type: 'major', reason: 'Tonalité relative majeure' },
       { root: 'E', type: 'minor', reason: 'Tonalité relative mineure' },
-      { root: 'B', type: 'mixolydian', reason: 'Altérée sur le V7 du mineur' }
+      { root: 'B', type: 'phrygian dominant', reason: 'Sur B7b9 ou B7b13 : Ré# est la tierce de l’accord' },
+      { root: 'F#', type: 'locrian', reason: 'Sur F#m7b5, avant B7' }
     ]
   },
   {
@@ -36,7 +39,9 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     tags: { styles: ['Swing', 'Ballad'], tempo: 'Lent', complexity: 'plusieurs gammes' },
     recommendedScales: [
       { root: 'D', type: 'minor', reason: 'Tonalité principale' },
-      { root: 'G', type: 'dorian', reason: 'Sur le IVm' }
+      { root: 'G', type: 'dorian', reason: 'Sur Gm7' },
+      { root: 'E', type: 'locrian', reason: 'Sur Em7b5' },
+      { root: 'A', type: 'phrygian dominant', reason: 'Sur A7b9, résolution vers Dm' }
     ]
   },
   {
@@ -45,7 +50,9 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     tags: { styles: ['Bossa/Latin'], tempo: 'Medium', complexity: 'plusieurs gammes' },
     recommendedScales: [
       { root: 'C', type: 'minor', reason: 'Section A (mineur)' },
-      { root: 'Db', type: 'major', reason: 'Section B (modulation majeure)' }
+      { root: 'Db', type: 'major', reason: 'Section B (modulation majeure)' },
+      { root: 'D', type: 'locrian', reason: 'Sur Dm7b5' },
+      { root: 'G', type: 'altered', reason: 'Sur G7#9 ; viser Si, Fa et Sib' }
     ]
   },
   {
@@ -66,7 +73,7 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     tags: { styles: ['Soul-Jazz/Funk'], tempo: 'Medium', complexity: 'plusieurs gammes' },
     recommendedScales: [
       { root: 'F', type: 'dorian', reason: 'Premier accord (Fm7)' },
-      { root: 'Db', type: 'mixolydian', reason: 'Accord suivant (Db7)' },
+      { root: 'Db', type: 'lydian dominant', reason: 'Sur Db7#11 : Sol est la onzième augmentée' },
       { root: 'D', type: 'dorian', reason: 'Transition Dm7' }
     ]
   },
@@ -76,7 +83,8 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     tags: { styles: ['Modal', 'Soul-Jazz/Funk'], tempo: 'Medium', complexity: 'plusieurs gammes' },
     recommendedScales: [
       { root: 'C', type: 'dorian', reason: 'Blues mineur modal en C' },
-      { root: 'F', type: 'dorian', reason: 'Sur le IVm7' }
+      { root: 'F', type: 'dorian', reason: 'Sur le IVm7' },
+      { root: 'C', type: 'blues', reason: 'Couleur blues sur les mesures de Cm' }
     ]
   },
   {
@@ -84,9 +92,10 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     title: 'Maiden Voyage',
     tags: { styles: ['Modal'], tempo: 'Medium', complexity: 'plusieurs gammes' },
     recommendedScales: [
-      { root: 'D', type: 'mixolydian', reason: 'D7sus4' },
-      { root: 'F', type: 'mixolydian', reason: 'F7sus4' },
-      { root: 'Eb', type: 'mixolydian', reason: 'Eb7sus4' }
+      { root: 'D', type: 'dorian', reason: 'Sur D7sus4 : Sol est la quarte suspendue' },
+      { root: 'F', type: 'dorian', reason: 'Sur F7sus4 : Sib est la quarte suspendue' },
+      { root: 'Eb', type: 'dorian', reason: 'Sur Eb7sus4 : Lab est la quarte suspendue' },
+      { root: 'Db', type: 'dorian', reason: 'Sur Db7sus4 : Solb est la quarte suspendue' }
     ]
   },
   {
@@ -102,7 +111,9 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     title: 'Nature Boy',
     tags: { styles: ['Ballad', 'Bossa/Latin'], tempo: 'Lent', complexity: '1 gamme' },
     recommendedScales: [
-      { root: 'D', type: 'minor', reason: 'Mélodie mélancolique en D mineur' }
+      { root: 'D', type: 'minor', reason: 'Tonalité principale ; adapter la septième sur A7' },
+      { root: 'E', type: 'locrian', reason: 'Sur Em7b5' },
+      { root: 'A', type: 'phrygian dominant', reason: 'Sur A7b9' }
     ]
   },
   {
@@ -110,7 +121,8 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     title: 'Return of the Prodigal Son',
     tags: { styles: ['Soul-Jazz/Funk'], tempo: 'Medium', complexity: '1 gamme' },
     recommendedScales: [
-      { root: 'F', type: 'blues', reason: 'Structure Blues Gospel' }
+      { root: 'C', type: 'dorian', reason: 'Version iReal Pro en Cm7–F7' },
+      { root: 'C', type: 'blues', reason: 'Couleur blues en do ; viser Fa sur F7' }
     ]
   },
   {
@@ -126,7 +138,7 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     title: 'So What',
     tags: { styles: ['Modal'], tempo: 'Medium', complexity: 'plusieurs gammes' },
     recommendedScales: [
-      { root: 'D', type: 'dorian', reason: 'Section A (32 mesures)' },
+      { root: 'D', type: 'dorian', reason: 'Sections A : 16 puis 8 mesures' },
       { root: 'Eb', type: 'dorian', reason: 'Section B (pont)' }
     ]
   },
@@ -135,7 +147,9 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     title: 'Song for My Father',
     tags: { styles: ['Bossa/Latin', 'Soul-Jazz/Funk'], tempo: 'Medium', complexity: '1 gamme' },
     recommendedScales: [
-      { root: 'F', type: 'blues', reason: 'Blues mineur binaire en F' }
+      { root: 'F', type: 'dorian', reason: 'Sur Fm7, centre modal du morceau' },
+      { root: 'F', type: 'blues', reason: 'Couleur blues sur Fm7' },
+      { root: 'C', type: 'phrygian dominant', reason: 'Sur C7 avant le retour à Fm' }
     ]
   },
   {
@@ -151,7 +165,9 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     title: 'Summertime',
     tags: { styles: ['Swing', 'Bossa/Latin'], tempo: 'Lent', complexity: '1 gamme' },
     recommendedScales: [
-      { root: 'A', type: 'minor', reason: 'Tonalité standard de Summertime' }
+      { root: 'A', type: 'minor', reason: 'Version en la mineur ; pas sur tous les accords' },
+      { root: 'B', type: 'locrian', reason: 'Sur Bm7b5' },
+      { root: 'E', type: 'phrygian dominant', reason: 'Sur E7b9, dominante de Am' }
     ]
   },
   {
@@ -159,7 +175,8 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     title: 'Summertime Chant',
     tags: { styles: ['Ballad'], tempo: 'Lent', complexity: '1 gamme' },
     recommendedScales: [
-      { root: 'B', type: 'minor', reason: 'Tonalité souvent choisie pour voix' }
+      { root: 'B', type: 'minor', reason: 'Version chant transposée en si mineur' },
+      { root: 'F#', type: 'phrygian dominant', reason: 'Sur F#7b9, dominante de Bm' }
     ]
   },
   {
@@ -167,7 +184,9 @@ export const JAZZ_STANDARDS: JazzStandard[] = [
     title: 'Watermelon Man',
     tags: { styles: ['Soul-Jazz/Funk'], tempo: 'Medium', complexity: '1 gamme' },
     recommendedScales: [
-      { root: 'F', type: 'mixolydian', reason: 'Blues en F avec un groove funk' }
+      { root: 'F', type: 'mixolydian', reason: 'Sur F7 ; viser La et Mib' },
+      { root: 'Bb', type: 'mixolydian', reason: 'Sur Bb9 ; viser Ré et Lab' },
+      { root: 'C', type: 'mixolydian', reason: 'Sur C9 ; viser Mi et Sib' }
     ]
   }
 ];

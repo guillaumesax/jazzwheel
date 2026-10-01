@@ -1,8 +1,10 @@
 # Jazz Wheel Pro
 
-Application React/TypeScript pour choisir un standard de jazz par tirage au sort ou dans le répertoire, filtrer par style, tempo et complexité, puis afficher les gammes conseillées en tonalité concert et pour instruments en Bb / Eb.
+Application React/TypeScript pour choisir un standard de jazz par tirage au sort ou dans le répertoire, filtrer par style, tempo et complexité, puis afficher les notes des gammes conseillées et les grilles d’accords en tonalité concert et pour instruments en Bb / Eb.
 
-Projet importé de Google AI Studio, puis fiabilisé dans Codex. Les 19 standards et leur contenu musical d'origine sont conservés.
+Projet importé de Google AI Studio, puis fiabilisé dans Codex. Les 19 entrées du répertoire sont conservées, avec des corrections musicales et deux versions chant transposées.
+
+Les grilles de `data/charts.ts` contiennent uniquement les symboles d’accords, sans mélodie. La source et les éventuelles variantes sont indiquées sur la page de chaque morceau : comparaison avec le Real Book en ut, volume 1 (exemplaire local), et arrangements exportés de l’application iReal Pro installée sur ce Mac. Les morceaux absents du volume consulté reposent sur iReal Pro ; une grille de jazz peut varier selon l’édition ou l’arrangement. Une case vaut une mesure ; les reprises et fins alternatives sont parfois déroulées ou simplifiées dans la vue pédagogique.
 
 ## Démarrer
 
@@ -36,6 +38,7 @@ La commande affiche l'adresse de l'aperçu de production. Les fichiers publiable
 ## Organisation
 
 - `data/tunes.ts` : répertoire, catégories et propositions de gammes.
+- `data/charts.ts` : grilles d’accords et provenance, une case par mesure écrite.
 - `components/Wheel.tsx` : dessin de la roue et animation native du navigateur.
 - `components/ResultDialog.tsx` : fenêtre de résultat accessible au clavier.
 - `pages/` : choix du morceau et affichage des gammes.
