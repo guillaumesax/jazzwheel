@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AccidentalPreference, JazzStandard } from '../types';
 import { CHARTS } from '../data/charts';
+import { SCALE_LINKS, type ScaleLink } from '../data/scaleLinks';
 import { JAZZ_STANDARDS } from '../data/tunes';
 import { formatFrenchNote, formatScaleName, scaleNotes, transposeChord, transposeNote } from '../utils/musicUtils';
 import { readStorage, writeStorage } from '../utils/storage';
@@ -20,6 +21,12 @@ const sectionFor = (id: string, bar: number, count: number): string => {
   const first = Math.floor(bar / phraseSize) * phraseSize + 1;
   return `${first}–${Math.min(first + phraseSize - 1, count)}`;
 };
+
+const linksForChords = (link: ScaleLink | undefined, count: number): (number | null)[] =>
+  Array.isArray(link) ? [...link] : Array(count).fill(link ?? null);
+
+const scaleMarkers = (links: (number | null)[]): (number | null)[] =>
+  links.filter((link, index) => index === 0 || link !== links[index - 1]);
 
 interface Props {
   item: JazzStandard;
@@ -94,16 +101,20 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
 
     <div className="projection__body">
       <section className="projection__chart" aria-label={`Grille complète en ${pitchInfo.label}, ${count} mesures`}>
-        <div className="projection__panel-title"><h2>GRILLE</h2>{chart && <a href={chart.sourceUrl} target="_blank" rel="noopener noreferrer" title={chart.source}>PARTITION MI♭ ↗</a>}<span>1 CASE = 1 MESURE</span></div>
+        <div className="projection__panel-title"><h2>GRILLE</h2>{chart && <a href={chart.sourceUrl} target="_blank" rel="noopener noreferrer" title={chart.source}>PARTITION MI♭ ↗</a>}<span>GRIS = NOTES DE L’ACCORD</span></div>
         <div className="projection__bars" style={{ '--bar-rows': Math.ceil(count / 4) } as React.CSSProperties}>
           {chart?.bars.map((bar, index) => {
             const section = sectionFor(item.id, index, count);
             const previous = index > 0 ? sectionFor(item.id, index - 1, count) : null;
             const chords = bar.split(' ').map(chord => transposeChord(chord, shift, pref));
-            return <div className={`projection__bar ${section !== previous ? 'projection__bar--section' : ''}`} key={index}>
-              <div className="projection__bar-meta"><span>{String(index + 1).padStart(2, '0')}</span>{section !== previous && <b>{section}</b>}</div>
+            const links = linksForChords(SCALE_LINKS[item.id]?.[index], chords.length);
+            const sameScale = links.every(link => link === links[0]) ? links[0] : null;
+            const markers = scaleMarkers(links);
+            const scaleDescription = links.map(link => link === null ? 'notes de l’accord' : `gamme ${link + 1}`).join(', puis ');
+            return <div className={`projection__bar ${section !== previous ? 'projection__bar--section' : ''}`} data-scale={sameScale ?? 'none'} role="group" aria-label={`Mesure ${index + 1} : ${chords.join(', puis ')} ; ${scaleDescription}`} key={index}>
+              <div className="projection__bar-meta"><span>{String(index + 1).padStart(2, '0')}</span>{section !== previous && <b>{section}</b>}<span className="projection__scale-markers" aria-hidden="true">{markers.map((link, markerIndex) => <span className="projection__scale-marker-part" key={markerIndex}>{markerIndex > 0 && <span className="projection__scale-arrow">›</span>}<span className="projection__scale-marker" data-scale={link ?? 'none'}>{link === null ? '·' : link + 1}</span></span>)}</span></div>
               <div className={`projection__chords ${chords.length > 1 ? 'projection__chords--split' : ''}`}>
-                {chords.map((chord, chordIndex) => <span key={chordIndex}>{chord}</span>)}
+                {chords.map((chord, chordIndex) => <span className="projection__chord" data-scale={links[chordIndex] ?? 'none'} key={chordIndex}>{chord}</span>)}
               </div>
             </div>;
           })}
@@ -111,13 +122,13 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
       </section>
 
       <section className="projection__scales" aria-label="Modes, gammes et notes à jouer">
-        <div className="projection__panel-title"><h2>À JOUER</h2><span>{pitchInfo.label.toUpperCase()}</span></div>
+        <div className="projection__panel-title"><h2>À JOUER</h2><span>MÊME COULEUR + N° · {pitchInfo.label.toUpperCase()}</span></div>
         <div className="projection__scale-list" style={{ '--scale-count': item.recommendedScales.length } as React.CSSProperties}>
           {item.recommendedScales.map((scale, index) => {
             const root = transposeNote(scale.root, pitchInfo.shift, pref);
             const notes = scaleNotes(root, scale.type);
-            return <article className="projection__scale" key={`${scale.root}-${scale.type}-${index}`}>
-              <div className="projection__scale-index">{String(index + 1).padStart(2, '0')}</div>
+            return <article className="projection__scale" data-scale={index} aria-label={`Gamme ${index + 1} : ${formatScaleName(root, scale.type)}`} key={`${scale.root}-${scale.type}-${index}`}>
+              <div className="projection__scale-index">{index + 1}</div>
               <div className="projection__scale-main">
                 <h3>{formatScaleName(root, scale.type)}</h3>
                 <p className="projection__reason">{scale.reason}</p>

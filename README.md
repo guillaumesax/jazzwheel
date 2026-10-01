@@ -4,7 +4,7 @@ Application React/TypeScript pour choisir un standard de jazz par tirage au sort
 
 Projet importé de Google AI Studio, puis fiabilisé dans Codex. Le répertoire comporte les 17 morceaux présents dans le dossier de partitions fourni pour la jam session.
 
-Les grilles de `data/charts.ts` contiennent uniquement les symboles d’accords, sans mélodie. Elles sont relevées des 17 partitions en Mi♭ du dossier fourni, puis converties en sons réels ; un lien vers la partition exacte figure sur chaque écran de projection. Une case vaut une mesure écrite. Les consignes de reprise, les fins alternatives et les suggestions de gamme de la feuille sont précisées dans la grille ou les recommandations.
+Les grilles de `data/charts.ts` contiennent uniquement les symboles d’accords, sans mélodie. Elles sont relevées des 17 partitions en Mi♭ du dossier fourni, puis converties en sons réels ; un lien vers la partition exacte figure sur chaque écran de projection. Une case vaut une mesure écrite. Chaque mesure reprend la couleur et le numéro de la gamme à jouer ; dans les mesures à deux accords, chaque accord peut avoir son propre repère. Le gris invite à suivre les notes de l’accord lorsqu'aucune gamme proposée ne correspond. Les consignes de reprise et les fins alternatives sont précisées dans la grille ou les recommandations.
 
 ## Démarrer
 
@@ -39,6 +39,7 @@ La commande affiche l'adresse de l'aperçu de production. Les fichiers publiable
 
 - `data/tunes.ts` : répertoire, catégories et propositions de gammes.
 - `data/charts.ts` : grilles d’accords et provenance, une case par mesure écrite.
+- `data/scaleLinks.ts` : correspondance entre chaque accord de la grille et la gamme conseillée.
 - `components/Wheel.tsx` : dessin de la roue et animation native du navigateur.
 - `components/ResultDialog.tsx` : fenêtre de résultat accessible au clavier.
 - `pages/` : roue et affichage projeté de la grille et des gammes.

@@ -5,6 +5,7 @@ import { rotationForIndex, indexAtPointer } from '../utils/wheelUtils';
 import { readStorage, writeStorage } from '../utils/storage';
 import { JAZZ_STANDARDS } from '../data/tunes';
 import { CHARTS } from '../data/charts';
+import { SCALE_LINKS } from '../data/scaleLinks';
 
 describe('transposition', () => {
   it.each([
@@ -90,5 +91,26 @@ describe('wheel result', () => {
     expect(CHARTS.footprints.bars).toHaveLength(12);
     expect(CHARTS.summertime.bars[0]).toBe('Dm');
     expect(CHARTS['maiden-voyage'].bars[0]).toBe('Am/D');
+  });
+  it('links each chord in every chart to a valid numbered scale or a neutral passing chord', () => {
+    for (const tune of JAZZ_STANDARDS) {
+      const bars = CHARTS[tune.id].bars;
+      const links = SCALE_LINKS[tune.id];
+      expect(links, tune.id).toHaveLength(bars.length);
+      const used = new Set<number>();
+      links.forEach((link, barIndex) => {
+        const chordCount = bars[barIndex].split(' ').length;
+        const indices = Array.isArray(link) ? link : Array(chordCount).fill(link);
+        expect(indices, `${tune.id} bar ${barIndex + 1}`).toHaveLength(chordCount);
+        for (const index of indices) {
+          if (index === null) continue;
+          expect(Number.isInteger(index)).toBe(true);
+          expect(index).toBeGreaterThanOrEqual(0);
+          expect(index).toBeLessThan(tune.recommendedScales.length);
+          used.add(index);
+        }
+      });
+      expect(used.size, `${tune.id} unused scale card`).toBe(tune.recommendedScales.length);
+    }
   });
 });

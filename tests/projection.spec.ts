@@ -54,6 +54,40 @@ test('the French line follows the written notes in the selected pitch', async ({
   await expect(page.locator('.projection__scale').first().locator('.projection__notes-fr')).toHaveText('Do · Ré · Mi · Fa · Sol · La · Si');
 });
 
+test('measure colors and numbers identify the same scale through a phrase and after transposition', async ({ page }) => {
+  await page.goto('/#projection/so-what');
+  await expect(page.locator('.projection__bar').nth(0)).toHaveAttribute('data-scale', '0');
+  await expect(page.locator('.projection__bar').nth(15)).toHaveAttribute('data-scale', '0');
+  await expect(page.locator('.projection__bar').nth(16)).toHaveAttribute('data-scale', '1');
+  await expect(page.locator('.projection__bar').nth(23)).toHaveAttribute('data-scale', '1');
+  await expect(page.locator('.projection__scale').nth(0)).toHaveAttribute('data-scale', '0');
+  await expect(page.locator('.projection__scale').nth(1)).toHaveAttribute('data-scale', '1');
+  const firstBar = page.locator('.projection__bar').first();
+  const firstScale = page.locator('.projection__scale').first();
+  const colors = await page.evaluate(() => {
+    const bar = document.querySelector('.projection__bar')!;
+    const scale = document.querySelector('.projection__scale')!;
+    return [getComputedStyle(bar).getPropertyValue('--scale-color').trim(), getComputedStyle(scale).getPropertyValue('--scale-color').trim()];
+  });
+  expect(colors[0]).toBe(colors[1]);
+  await expect(firstBar.locator('.projection__scale-marker')).toHaveText('1');
+  await expect(firstScale.locator('.projection__scale-index')).toHaveText('1');
+  await page.getByRole('button', { name: 'Si♭' }).click();
+  await expect(firstBar).toHaveAttribute('data-scale', '0');
+  await expect(firstScale).toHaveAttribute('data-scale', '0');
+});
+
+test('a measure with two harmonic choices shows both scale references', async ({ page }) => {
+  await page.goto('/#projection/nature-boy');
+  const bar = page.locator('.projection__bar').nth(1);
+  await expect(bar.locator('.projection__chord')).toHaveCount(2);
+  await expect(bar.locator('.projection__chord').nth(0)).toHaveAttribute('data-scale', '2');
+  await expect(bar.locator('.projection__chord').nth(1)).toHaveAttribute('data-scale', '3');
+  await expect(bar.locator('.projection__scale-marker').nth(0)).toHaveText('3');
+  await expect(bar.locator('.projection__scale-marker').nth(1)).toHaveText('4');
+  await expect(page.locator('.projection__bar').nth(27)).toHaveAttribute('data-scale', 'none');
+});
+
 test('projection transposes chart and notes together and retains selection', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.goto('/#projection/blue-bossa');
