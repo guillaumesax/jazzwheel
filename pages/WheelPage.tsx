@@ -9,12 +9,11 @@ import ResultDialog from '../components/ResultDialog';
 
 interface WheelPageProps {
   onSelect: (item: JazzStandard) => void;
-  onWheelSelect: (item: JazzStandard) => void;
 }
 
 type Mode = 'wheel' | 'manual';
 
-const WheelPage: React.FC<WheelPageProps> = ({ onSelect, onWheelSelect }) => {
+const WheelPage: React.FC<WheelPageProps> = ({ onSelect }) => {
   const [mode, setMode] = useState<Mode>(() => {
     return readStorage('jazz_mode') === 'manual' ? 'manual' : 'wheel';
   });
@@ -192,7 +191,7 @@ const WheelPage: React.FC<WheelPageProps> = ({ onSelect, onWheelSelect }) => {
             {showVictory && lastResult && (
               <ResultDialog item={lastResult} onSelect={() => {
                 setShowVictory(false);
-                onWheelSelect(lastResult);
+                onSelect(lastResult);
               }} onClose={() => { setShowVictory(false); setLastResult(null); }} />
             )}
           </div>
@@ -237,7 +236,7 @@ const WheelPage: React.FC<WheelPageProps> = ({ onSelect, onWheelSelect }) => {
                   onClick={() => onSelect(manualSelection)}
                   className="w-full max-w-md py-5 rounded-2xl bg-indigo-600 text-white font-black text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200"
                 >
-                  OUVRIR LES GAMMES
+                  AFFICHER LA GRILLE ET LES GAMMES
                 </button>
               </div>
             )}

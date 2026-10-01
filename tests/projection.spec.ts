@@ -20,6 +20,12 @@ test('wheel stays fully visible before the draw at projector sizes', async ({ pa
   }
 });
 
+test('legacy standard links open the projection layout', async ({ page }) => {
+  await page.goto('/#standard/blue-bossa');
+  await expect(page.getByRole('heading', { name: 'Blue Bossa' })).toBeVisible();
+  await expect(page.locator('.projection__bar')).toHaveCount(16);
+});
+
 test('every chart fits both landscape projector sizes', async ({ page }) => {
   for (const viewport of [{ width: 1920, height: 1080 }, { width: 1366, height: 768 }]) {
     await page.setViewportSize(viewport);

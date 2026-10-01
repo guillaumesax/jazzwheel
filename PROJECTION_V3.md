@@ -1,6 +1,6 @@
 # V3 · proposition projection pour jam session
 
-Le parcours principal reste celui de la roue de la fortune : **lancer la roue → découvrir le standard gagnant → afficher sa grille et ses gammes en projection → revenir à la roue pour rejouer**. La sélection manuelle et la fiche V2 restent accessibles comme chemins secondaires. Un lien direct `/#projection/blue-bossa` reste possible. Cette V3 reste une branche locale dédiée, sans publication. Le sélecteur en haut change de morceau sans quitter la projection. Les touches `1`, `2`, `3` choisissent respectivement concert, si♭ et mi♭ ; `Échap` revient à la roue. Le choix des altérations et de la transposition est mémorisé localement.
+Le parcours principal reste celui de la roue de la fortune : **lancer la roue → découvrir le standard gagnant → afficher sa grille et ses gammes en projection → revenir à la roue pour rejouer**. L'onglet **Sélection** ouvre exactement la même vue projection après le choix manuel d'un morceau. Les anciens liens `/#standard/...` ouvrent aussi la vue projection ; les liens directs `/#projection/...` restent possibles. Cette V3 reste une branche locale dédiée, sans publication. Le sélecteur en haut change de morceau sans quitter la projection. Les touches `1`, `2`, `3` choisissent respectivement concert, si♭ et mi♭ ; `Échap` revient à la roue. Le choix des altérations et de la transposition est mémorisé localement.
 
 ## Composition de l'écran
 
