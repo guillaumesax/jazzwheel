@@ -1,0 +1,39 @@
+import { test, expect } from '@playwright/test';
+import { JAZZ_STANDARDS } from '../data/tunes';
+import { CHARTS } from '../data/charts';
+
+test('every chart fits both landscape projector sizes', async ({ page }) => {
+  for (const viewport of [{ width: 1920, height: 1080 }, { width: 1366, height: 768 }]) {
+    await page.setViewportSize(viewport);
+    for (const tune of JAZZ_STANDARDS) {
+      await page.goto(`/#projection/${tune.id}`);
+      await expect(page.getByRole('heading', { name: tune.title, exact: true })).toBeVisible();
+      await page.evaluate(() => document.fonts.ready);
+      const expectedBars = CHARTS[tune.id.replace(/-chant$/, '')].bars.length;
+      await expect(page.locator('.projection__bar')).toHaveCount(expectedBars);
+      await expect(page.locator('.projection__scale')).toHaveCount(tune.recommendedScales.length);
+      const layout = await page.evaluate(() => ({
+        width: document.documentElement.scrollWidth,
+        height: document.documentElement.scrollHeight,
+        clipped: [...document.querySelectorAll<HTMLElement>('.projection__bar,.projection__scale')]
+          .filter(element => element.scrollWidth > element.clientWidth + 1 || element.scrollHeight > element.clientHeight + 1).length,
+      }));
+      expect(layout, `${tune.id} at ${viewport.width}×${viewport.height}`).toEqual({ ...viewport, clipped: 0 });
+    }
+  }
+});
+
+test('projection transposes chart and notes together and retains selection', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto('/#projection/blue-bossa');
+  await expect(page.locator('.projection__bar').first()).toContainText('Cm7');
+  await page.getByRole('button', { name: 'Si♭' }).click();
+  await expect(page.locator('.projection__bar').first()).toContainText('Dm7');
+  await expect(page.locator('.projection__scale').first()).toContainText('D mineur naturel');
+  await page.keyboard.press('3');
+  await expect(page.locator('.projection__bar').first()).toContainText('Am7');
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Mi♭' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Quitter le mode projection' }).click();
+  await expect(page.getByRole('heading', { name: 'Blue Bossa' })).toBeVisible();
+});

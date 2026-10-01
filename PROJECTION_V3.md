@@ -1,0 +1,17 @@
+# V3 · proposition projection pour jam session
+
+Ouvrir un morceau dans la V2 puis choisir **Mode projection**, ou utiliser `/#projection/blue-bossa`. Cette V3 reste une branche locale dédiée, sans publication. Le sélecteur en haut change de morceau sans quitter la projection. Les touches `1`, `2`, `3` choisissent respectivement concert, si♭ et mi♭ ; `Échap` revient à la fiche du morceau. Le choix des altérations et de la transposition est mémorisé localement.
+
+## Composition de l'écran
+
+- Une seule page paysage : titre et centre tonal en haut, grille complète à gauche, modes/gammes et notes à droite. Les accords **et** les gammes suivent le même instrument.
+- Quatre mesures par ligne. Cela donne 3 lignes pour 12 mesures, 4 pour 16, 6 pour 24 et 8 pour 32. La grille de 22 mesures occupe 6 lignes, avec deux cases sur la dernière. Deux accords dans une case représentent deux demi-mesures.
+- Les formes attestées dans les données portent leur nom : `A 16 / B 8 / A 8` pour *So What* et `A 8 / B 8 / A 8` pour *Maiden Voyage*. Les autres séparateurs portent des plages de mesures, afin de ne pas attribuer une forme musicale non vérifiée. Les mesures sont toutes écrites dans l'ordre fourni par la V2 ; la note de la grille rappelle les reprises ou fins simplifiées lorsqu'elles sont connues. La V3 ne crée pas de nouveaux signes de reprise ni de déroulement spéculatif.
+- Fond bleu nuit, texte blanc et notes jaune clair. Les bordures turquoise marquent les débuts de phrases. Le contraste clair/foncé et les numéros de mesures rendent la structure repérable sans dépendre de la couleur seule.
+- À 1366×768, le titre est d'environ 45 px ; les accords simples sont d'environ 20 px, les accords doubles 16 px et les notes de gamme 18 px. À 1920×1080, ces valeurs montent jusqu'à 62, 29, 21 et 21 px. Les descriptions de gamme restent secondaires et plus petites. La densité d'une grille de 32 mesures avec cinq gammes impose encore une limite de lecture au fond d'une grande salle : c'est le premier point à juger sur le vidéoprojecteur réel.
+
+## Vérification locale
+
+`npm run build`, `npm test` et `npm run test:e2e`. Le test navigateur visite les 19 entrées du répertoire en 1920×1080 et 1366×768, vérifie le nombre de mesures et de gammes, l'absence de défilement et de contenu coupé, puis contrôle la transposition conjointe de la grille et des notes.
+
+Les grilles et recommandations musicales restent celles de `data/charts.ts` et `data/tunes.ts` ; la transposition réutilise `utils/musicUtils.ts`. La lisibilité perçue dépend de la taille, de la luminosité et de la distance réelles de projection.

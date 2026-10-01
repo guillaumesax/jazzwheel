@@ -8,9 +8,10 @@ import { CHARTS } from '../data/charts';
 interface ScalesPageProps {
   item: JazzStandard;
   onBack: () => void;
+  onProjection: () => void;
 }
 
-const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
+const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack, onProjection }) => {
   const [chartPitch, setChartPitch] = useState<'concert' | 'bb' | 'eb'>('concert');
   const variantShift = item.id === 'all-of-me-chant' ? -4 : item.id === 'summertime-chant' ? 2 : 0;
   const chart = CHARTS[item.id.replace(/-chant$/, '')];
@@ -42,6 +43,8 @@ const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
           <span className="hidden sm:inline">Retour</span>
         </button>
 
+        <div className="flex items-center gap-3">
+        <button onClick={onProjection} className="px-5 py-3 rounded-xl bg-teal-300 text-slate-950 font-black uppercase tracking-wider text-sm hover:bg-teal-200">Mode projection ↗</button>
         <div className="flex bg-slate-800/50 p-1.5 rounded-2xl border border-slate-700 shadow-inner">
           {(['#', 'b', 'auto'] as AccidentalPreference[]).map(p => (
             <button
@@ -56,6 +59,7 @@ const ScalesPage: React.FC<ScalesPageProps> = ({ item, onBack }) => {
               {p === 'auto' ? 'Auto' : p}
             </button>
           ))}
+        </div>
         </div>
       </nav>
 
