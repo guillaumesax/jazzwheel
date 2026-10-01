@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { getNoteIndex, transposeNote, formatScaleName, scaleNotes, transposeChord } from '../utils/musicUtils';
+import { getNoteIndex, transposeNote, formatScaleName, scaleNotes, formatFrenchNote, transposeChord } from '../utils/musicUtils';
 import { parseFilters, filterStandards } from '../utils/filters';
 import { rotationForIndex, indexAtPointer } from '../utils/wheelUtils';
 import { readStorage, writeStorage } from '../utils/storage';
@@ -29,6 +29,10 @@ describe('transposition', () => {
     expect(scaleNotes('G', 'altered')).toEqual(['G', 'Ab', 'Bb', 'B', 'Db', 'Eb', 'F']);
     expect(scaleNotes('Db', 'lydian dominant')).toEqual(['Db', 'Eb', 'F', 'G', 'Ab', 'Bb', 'Cb']);
     expect(scaleNotes('C', 'blues')).toEqual(['C', 'Eb', 'F', 'Gb', 'G', 'Bb']);
+  });
+  it('renders the same pitches with French note names', () => {
+    expect(scaleNotes('Ab', 'major').map(formatFrenchNote)).toEqual(['Lab', 'Sib', 'Do', 'Réb', 'Mib', 'Fa', 'Sol']);
+    expect(['B', 'Bb', 'B#', 'Cb', 'Ebb'].map(formatFrenchNote)).toEqual(['Si', 'Sib', 'Si#', 'Dob', 'Mibb']);
   });
   it('transposes chart chords without changing chord qualities', () => {
     expect(transposeChord('Cm7', 2)).toBe('Dm7');

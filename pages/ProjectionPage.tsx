@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { AccidentalPreference, JazzStandard } from '../types';
 import { CHARTS } from '../data/charts';
 import { JAZZ_STANDARDS } from '../data/tunes';
-import { formatScaleName, scaleNotes, transposeChord, transposeNote } from '../utils/musicUtils';
+import { formatFrenchNote, formatScaleName, scaleNotes, transposeChord, transposeNote } from '../utils/musicUtils';
 import { readStorage, writeStorage } from '../utils/storage';
 import './projection.css';
 
@@ -116,12 +116,14 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
         <div className="projection__scale-list" style={{ '--scale-count': item.recommendedScales.length } as React.CSSProperties}>
           {item.recommendedScales.map((scale, index) => {
             const root = transposeNote(scale.root, pitchInfo.shift, pref);
+            const notes = scaleNotes(root, scale.type);
             return <article className="projection__scale" key={`${scale.root}-${scale.type}-${index}`}>
               <div className="projection__scale-index">{String(index + 1).padStart(2, '0')}</div>
               <div className="projection__scale-main">
                 <h3>{formatScaleName(root, scale.type)}</h3>
                 <p className="projection__reason">{scale.reason}</p>
-                <p className="projection__notes" aria-label={`Notes : ${scaleNotes(root, scale.type).join(', ')}`}>{scaleNotes(root, scale.type).join(' · ')}</p>
+                <p className="projection__notes" aria-label={`Notes : ${notes.join(', ')}`}>{notes.join(' · ')}</p>
+                <p className="projection__notes-fr" lang="fr" aria-label={`Noms des notes en français : ${notes.map(formatFrenchNote).join(', ')}`}>{notes.map(formatFrenchNote).join(' · ')}</p>
               </div>
             </article>;
           })}

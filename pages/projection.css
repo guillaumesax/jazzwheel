@@ -40,6 +40,7 @@
 .projection__scale h3 { font-size:clamp(17px,1.32vw,26px); font-weight:900; line-height:1.12; }
 .projection__reason { color:var(--muted); font-size:clamp(11px,.76vw,15px); font-weight:700; line-height:1.2; margin-top:2px; }
 .projection__notes { color:#f9e2a8; font-size:clamp(18px,1.03vw,21px); font-weight:800; line-height:1.2; margin-top:clamp(2px,.4vh,6px); letter-spacing:.015em; }
+.projection__notes-fr { color:#d4e5e5; font-size:clamp(16px,.93vw,19px); font-weight:700; line-height:1.2; margin-top:2px; letter-spacing:.01em; }
 .projection__footer { display:flex; justify-content:space-between; gap:20px; color:var(--muted); font-size:clamp(11px,.73vw,14px); font-weight:700; min-height:19px; line-height:1.15; }
 .projection__footer span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .projection__footer span:last-child { flex:none; }

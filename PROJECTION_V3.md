@@ -5,6 +5,7 @@ Le parcours principal reste celui de la roue de la fortune : **lancer la roue �
 ## Composition de l'écran
 
 - Une seule page paysage : titre et centre tonal en haut, grille complète à gauche, modes/gammes et notes à droite. Les accords **et** les gammes suivent le même instrument.
+- Chaque gamme affiche deux lignes de notes : l'écriture internationale utilisée dans les grilles (`Ab · Bb · C…`), puis les noms français (`Lab · Sib · Do…`). `Bb` correspond à **Sib**.
 - La roue animée reste la première vue du parcours. Son diamètre s'adapte à la hauteur d'un projecteur 16:9 pour montrer le disque entier, le bouton GO et le repère du gagnant sans défilement.
 - Quatre mesures par ligne. Cela donne 3 lignes pour 12 mesures, 4 pour 16, 6 pour 24 et 8 pour 32. La grille de 22 mesures occupe 6 lignes, avec deux cases sur la dernière. Deux accords dans une case représentent deux demi-mesures.
 - Les formes attestées dans les données portent leur nom : `A 16 / B 8 / A 8` pour *So What* et `A 8 / B 8 / A 8` pour *Maiden Voyage*. Les autres séparateurs portent des plages de mesures, afin de ne pas attribuer une forme musicale non vérifiée. Les mesures sont toutes écrites dans l'ordre fourni par la V2 ; la note de la grille rappelle les reprises ou fins simplifiées lorsqu'elles sont connues. La V3 ne crée pas de nouveaux signes de reprise ni de déroulement spéculatif.

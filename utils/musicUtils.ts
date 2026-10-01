@@ -63,6 +63,16 @@ export function scaleNotes(root: string, type: ScaleRecommendation['type']): str
   });
 }
 
+const FRENCH_NOTE_NAMES: Record<string, string> = {
+  C: 'Do', D: 'Ré', E: 'Mi', F: 'Fa', G: 'Sol', A: 'La', B: 'Si',
+};
+
+export function formatFrenchNote(note: string): string {
+  const match = /^([A-G])([#b♯♭]*)$/.exec(note);
+  if (!match) return note;
+  return FRENCH_NOTE_NAMES[match[1]] + match[2].replaceAll('♯', '#').replaceAll('♭', 'b');
+}
+
 export function transposeChord(chord: string, semitones: number, pref: AccidentalPreference = 'auto'): string {
   return chord.replace(/(^|\s|\/)([A-G](?:#|b)?)/g, (_, prefix: string, root: string) =>
     prefix + transposeNote(root, semitones, pref === 'auto' && root.includes('#') ? '#' : pref));

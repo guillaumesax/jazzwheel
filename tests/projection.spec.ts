@@ -36,6 +36,7 @@ test('every chart fits both landscape projector sizes', async ({ page }) => {
       const expectedBars = CHARTS[tune.id.replace(/-chant$/, '')].bars.length;
       await expect(page.locator('.projection__bar')).toHaveCount(expectedBars);
       await expect(page.locator('.projection__scale')).toHaveCount(tune.recommendedScales.length);
+      await expect(page.locator('.projection__notes-fr')).toHaveCount(tune.recommendedScales.length);
       const layout = await page.evaluate(() => ({
         width: document.documentElement.scrollWidth,
         height: document.documentElement.scrollHeight,
@@ -45,6 +46,12 @@ test('every chart fits both landscape projector sizes', async ({ page }) => {
       expect(layout, `${tune.id} at ${viewport.width}×${viewport.height}`).toEqual({ ...viewport, clipped: 0 });
     }
   }
+});
+
+test('the French line follows the written notes in the singer key', async ({ page }) => {
+  await page.goto('/#projection/all-of-me-chant');
+  await expect(page.locator('.projection__scale').first().locator('.projection__notes')).toHaveText('Ab · Bb · C · Db · Eb · F · G');
+  await expect(page.locator('.projection__scale').first().locator('.projection__notes-fr')).toHaveText('Lab · Sib · Do · Réb · Mib · Fa · Sol');
 });
 
 test('projection transposes chart and notes together and retains selection', async ({ page }) => {
