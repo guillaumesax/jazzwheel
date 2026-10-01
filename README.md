@@ -2,9 +2,9 @@
 
 Application React/TypeScript pour choisir un standard de jazz par tirage au sort ou dans le répertoire, filtrer par style, tempo et complexité, puis afficher les notes des gammes conseillées et les grilles d’accords en tonalité concert et pour instruments en Bb / Eb.
 
-Projet importé de Google AI Studio, puis fiabilisé dans Codex. Les 19 entrées du répertoire sont conservées, avec des corrections musicales et deux versions chant transposées.
+Projet importé de Google AI Studio, puis fiabilisé dans Codex. Le répertoire comporte les 17 morceaux présents dans le dossier de partitions fourni pour la jam session.
 
-Les grilles de `data/charts.ts` contiennent uniquement les symboles d’accords, sans mélodie. La source et les éventuelles variantes sont indiquées sur la page de chaque morceau : comparaison avec le Real Book en ut, volume 1 (exemplaire local), et arrangements exportés de l’application iReal Pro installée sur ce Mac. Les morceaux absents du volume consulté reposent sur iReal Pro ; une grille de jazz peut varier selon l’édition ou l’arrangement. Une case vaut une mesure ; les reprises et fins alternatives sont parfois déroulées ou simplifiées dans la vue pédagogique.
+Les grilles de `data/charts.ts` contiennent uniquement les symboles d’accords, sans mélodie. Elles sont relevées des 17 partitions en Mi♭ du dossier fourni, puis converties en sons réels ; un lien vers la partition exacte figure sur chaque écran de projection. Une case vaut une mesure écrite. Les consignes de reprise, les fins alternatives et les suggestions de gamme de la feuille sont précisées dans la grille ou les recommandations.
 
 ## Démarrer
 
@@ -41,7 +41,7 @@ La commande affiche l'adresse de l'aperçu de production. Les fichiers publiable
 - `data/charts.ts` : grilles d’accords et provenance, une case par mesure écrite.
 - `components/Wheel.tsx` : dessin de la roue et animation native du navigateur.
 - `components/ResultDialog.tsx` : fenêtre de résultat accessible au clavier.
-- `pages/` : choix du morceau et affichage des gammes.
+- `pages/` : roue et affichage projeté de la grille et des gammes.
 - `utils/` : transposition, filtres, stockage et calcul de rotation.
 - `tests/` : tests de logique et parcours navigateur.
 

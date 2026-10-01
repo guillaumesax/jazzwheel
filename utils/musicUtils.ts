@@ -23,7 +23,7 @@ export const transposeNote = (root: string, semitones: number, pref: AccidentalP
 };
 
 const SCALE_LABELS: Record<ScaleRecommendation['type'], string> = {
-  major: 'majeur', minor: 'mineur naturel', dorian: 'dorien', mixolydian: 'mixolydien',
+  major: 'majeur', minor: 'mineur naturel', 'melodic minor': 'mineur mélodique', dorian: 'dorien', mixolydian: 'mixolydien',
   blues: 'blues', 'pentatonic major': 'pentatonique majeure', 'pentatonic minor': 'pentatonique mineure',
   locrian: 'locrien', 'phrygian dominant': 'phrygien dominant',
   altered: 'altéré',
@@ -36,6 +36,7 @@ type Degree = readonly [number, number];
 const SCALE_DEGREES: Record<ScaleRecommendation['type'], readonly Degree[]> = {
   major: [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]],
   minor: [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, -1], [7, -1]],
+  'melodic minor': [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, 0], [7, 0]],
   dorian: [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, 0], [7, -1]],
   mixolydian: [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, -1]],
   blues: [[1, 0], [3, -1], [4, 0], [5, -1], [5, 0], [7, -1]],

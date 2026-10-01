@@ -1,5 +1,7 @@
 # Première revue — 29 septembre 2026
 
+Document historique de la première revue. Les grilles et gammes ont ensuite été remplacées par les relevés des 17 partitions fournies le 1er octobre 2026 ; voir `README.md` et `PROJECTION_V3.md` pour l'état actuel.
+
 ## Corrections réalisées
 
 - Import complet de l'archive sans modifier le ZIP original.

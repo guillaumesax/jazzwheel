@@ -29,6 +29,7 @@ describe('transposition', () => {
     expect(scaleNotes('G', 'altered')).toEqual(['G', 'Ab', 'Bb', 'B', 'Db', 'Eb', 'F']);
     expect(scaleNotes('Db', 'lydian dominant')).toEqual(['Db', 'Eb', 'F', 'G', 'Ab', 'Bb', 'Cb']);
     expect(scaleNotes('C', 'blues')).toEqual(['C', 'Eb', 'F', 'Gb', 'G', 'Bb']);
+    expect(scaleNotes('D', 'melodic minor')).toEqual(['D', 'E', 'F', 'G', 'A', 'B', 'C#']);
   });
   it('renders the same pitches with French note names', () => {
     expect(scaleNotes('Ab', 'major').map(formatFrenchNote)).toEqual(['Lab', 'Sib', 'Do', 'Réb', 'Mib', 'Fa', 'Sol']);
@@ -74,12 +75,20 @@ describe('wheel result', () => {
       }
     }
   });
-  it('has unique ids and valid notes in the imported repertoire', () => {
+  it('has one sourced score per wheel entry and the expected written forms', () => {
+    expect(JAZZ_STANDARDS).toHaveLength(17);
     expect(new Set(JAZZ_STANDARDS.map(item => item.id)).size).toBe(JAZZ_STANDARDS.length);
     for (const item of JAZZ_STANDARDS) {
-      expect(CHARTS[item.id.replace(/-chant$/, '')]?.bars.length).toBeGreaterThanOrEqual(12);
+      expect(CHARTS[item.id]?.bars.length).toBeGreaterThanOrEqual(12);
+      expect(CHARTS[item.id]?.sourceUrl).toMatch(/^https:\/\/drive\.google\.com\/file\/d\//);
       expect(item.recommendedScales.length).toBeGreaterThan(0);
       for (const scale of item.recommendedScales) expect(getNoteIndex(scale.root)).toBeGreaterThanOrEqual(0);
     }
+    expect(CHARTS['autumn-leaves'].bars).toHaveLength(32);
+    expect(CHARTS['autumn-leaves'].bars.slice(0, 4)).toEqual(['Cm7', 'F7', 'Bbmaj7', 'Ebmaj7']);
+    expect(JAZZ_STANDARDS.find(tune => tune.id === 'autumn-leaves')?.recommendedScales[0].root).toBe('G');
+    expect(CHARTS.footprints.bars).toHaveLength(12);
+    expect(CHARTS.summertime.bars[0]).toBe('Dm');
+    expect(CHARTS['maiden-voyage'].bars[0]).toBe('Am/D');
   });
 });

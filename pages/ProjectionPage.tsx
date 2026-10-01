@@ -37,10 +37,9 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
     return saved === '#' || saved === 'b' ? saved : 'auto';
   });
   const heading = useRef<HTMLHeadingElement>(null);
-  const chart = CHARTS[item.id.replace(/-chant$/, '')];
-  const variantShift = item.id === 'all-of-me-chant' ? -4 : item.id === 'summertime-chant' ? 2 : 0;
+  const chart = CHARTS[item.id];
   const pitchInfo = PITCHES.find(p => p.value === pitch)!;
-  const shift = variantShift + pitchInfo.shift;
+  const shift = pitchInfo.shift;
   const count = chart?.bars.length ?? 0;
 
   useEffect(() => { heading.current?.focus(); }, [item.id]);
@@ -77,7 +76,7 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
           </select>
         </label>
         <div className="projection__key">
-          <span>CENTRE TONAL · {pitchInfo.label.toUpperCase()}</span>
+          <span>GAMME REPÈRE · {pitchInfo.label.toUpperCase()}</span>
           <strong>{transposeNote(item.recommendedScales[0].root, pitchInfo.shift, pref)}</strong>
         </div>
       </div>
@@ -95,7 +94,7 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
 
     <div className="projection__body">
       <section className="projection__chart" aria-label={`Grille complète en ${pitchInfo.label}, ${count} mesures`}>
-        <div className="projection__panel-title"><h2>GRILLE</h2><span>1 CASE = 1 MESURE</span></div>
+        <div className="projection__panel-title"><h2>GRILLE</h2>{chart && <a href={chart.sourceUrl} target="_blank" rel="noopener noreferrer" title={chart.source}>PARTITION MI♭ ↗</a>}<span>1 CASE = 1 MESURE</span></div>
         <div className="projection__bars" style={{ '--bar-rows': Math.ceil(count / 4) } as React.CSSProperties}>
           {chart?.bars.map((bar, index) => {
             const section = sectionFor(item.id, index, count);

@@ -25,6 +25,7 @@
 .projection__panel-title { display:flex; justify-content:space-between; align-items:center; gap:10px; min-height:25px; margin-bottom:8px; }
 .projection__panel-title h2 { color:var(--accent); font-size:clamp(14px,.9vw,18px); font-weight:900; letter-spacing:.16em; }
 .projection__panel-title span { color:var(--muted); font-size:clamp(10px,.65vw,13px); font-weight:800; letter-spacing:.1em; }
+.projection__panel-title a { color:#f9e2a8; font-size:clamp(10px,.65vw,13px); font-weight:800; letter-spacing:.06em; text-decoration:underline; text-underline-offset:3px; margin-left:auto; }
 .projection__bars { flex:1; min-height:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:repeat(var(--bar-rows),minmax(0,1fr)); gap:clamp(5px,.45vw,9px); }
 .projection__bar { min-width:0; min-height:0; background:#192b3d; border:1px solid #37506a; border-radius:8px; padding:clamp(5px,.46vw,9px) clamp(6px,.58vw,11px); display:flex; flex-direction:column; justify-content:space-between; }
 .projection__bar--section { border-left:4px solid var(--accent); }

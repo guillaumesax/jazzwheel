@@ -33,7 +33,7 @@ test('every chart fits both landscape projector sizes', async ({ page }) => {
       await page.goto(`/#projection/${tune.id}`);
       await expect(page.getByRole('heading', { name: tune.title, exact: true })).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
-      const expectedBars = CHARTS[tune.id.replace(/-chant$/, '')].bars.length;
+      const expectedBars = CHARTS[tune.id].bars.length;
       await expect(page.locator('.projection__bar')).toHaveCount(expectedBars);
       await expect(page.locator('.projection__scale')).toHaveCount(tune.recommendedScales.length);
       await expect(page.locator('.projection__notes-fr')).toHaveCount(tune.recommendedScales.length);
@@ -48,21 +48,21 @@ test('every chart fits both landscape projector sizes', async ({ page }) => {
   }
 });
 
-test('the French line follows the written notes in the singer key', async ({ page }) => {
-  await page.goto('/#projection/all-of-me-chant');
-  await expect(page.locator('.projection__scale').first().locator('.projection__notes')).toHaveText('Ab · Bb · C · Db · Eb · F · G');
-  await expect(page.locator('.projection__scale').first().locator('.projection__notes-fr')).toHaveText('Lab · Sib · Do · Réb · Mib · Fa · Sol');
+test('the French line follows the written notes in the selected pitch', async ({ page }) => {
+  await page.goto('/#projection/all-of-me');
+  await expect(page.locator('.projection__scale').first().locator('.projection__notes')).toHaveText('C · D · E · F · G · A · B');
+  await expect(page.locator('.projection__scale').first().locator('.projection__notes-fr')).toHaveText('Do · Ré · Mi · Fa · Sol · La · Si');
 });
 
 test('projection transposes chart and notes together and retains selection', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.goto('/#projection/blue-bossa');
-  await expect(page.locator('.projection__bar').first()).toContainText('Cm7');
+  await expect(page.locator('.projection__bar').first()).toContainText('Cm');
   await page.getByRole('button', { name: 'Si♭' }).click();
-  await expect(page.locator('.projection__bar').first()).toContainText('Dm7');
+  await expect(page.locator('.projection__bar').first()).toContainText('Dm');
   await expect(page.locator('.projection__scale').first()).toContainText('D mineur naturel');
   await page.keyboard.press('3');
-  await expect(page.locator('.projection__bar').first()).toContainText('Am7');
+  await expect(page.locator('.projection__bar').first()).toContainText('Am');
   await page.reload();
   await expect(page.getByRole('button', { name: 'Mi♭' })).toHaveAttribute('aria-pressed', 'true');
   await page.getByRole('button', { name: 'Quitter le mode projection et revenir à la roue' }).click();

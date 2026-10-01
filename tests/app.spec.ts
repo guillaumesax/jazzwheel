@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { JAZZ_STANDARDS } from '../data/tunes';
 
 const noOverflow = async (page: import('@playwright/test').Page) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -56,12 +57,11 @@ test('spin locks filters, survives a parent update, and matches the pointer', as
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible({ timeout: 8000 });
   const winner = await dialog.getByRole('heading').textContent();
-  const pointerIndex = await page.locator('canvas').evaluate(canvas => {
+  const pointerIndex = await page.locator('canvas').evaluate((canvas, count) => {
     const rotation = parseFloat(canvas.style.transform.slice(7));
     const tau = 2 * Math.PI;
-    return Math.floor(((-rotation % tau) + tau) % tau / (tau / 19));
-  });
-  const { JAZZ_STANDARDS } = await import('../data/tunes');
+    return Math.floor(((-rotation % tau) + tau) % tau / (tau / count));
+  }, JAZZ_STANDARDS.length);
   expect(winner).toBe(JAZZ_STANDARDS[pointerIndex].title);
   await expect(dialog.getByRole('button', { name: 'AFFICHER LA GRILLE ET LES GAMMES' })).toBeFocused();
   await noOverflow(page);
@@ -104,7 +104,7 @@ test('reduced motion gives an immediate result, including a single candidate', a
   await dialog.getByRole('button', { name: 'AFFICHER LA GRILLE ET LES GAMMES' }).click();
   await expect(page.getByRole('heading', { name: 'Mr PC', exact: true })).toBeVisible();
   await expect(page.locator('.projection__bar')).toHaveCount(12);
-  await expect(page.locator('.projection__scale')).toHaveCount(1);
+  await expect(page.locator('.projection__scale')).toHaveCount(JAZZ_STANDARDS.find(tune => tune.id === 'mr-pc')!.recommendedScales.length);
   await page.getByRole('button', { name: 'Quitter le mode projection et revenir à la roue' }).click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Lancer la roue' })).toBeVisible();
