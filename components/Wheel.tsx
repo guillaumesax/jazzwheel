@@ -1,6 +1,7 @@
 
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { JazzStandard } from '../types';
+import React, { useRef, useEffect, useCallback } from 'react';
+import type { JazzStandard } from '../types';
+import { normalizeAngle, rotationForIndex } from '../utils/wheelUtils';
 
 interface WheelProps {
   items: JazzStandard[];
@@ -11,8 +12,9 @@ interface WheelProps {
 
 const Wheel: React.FC<WheelProps> = ({ items, onResult, isSpinning, setIsSpinning }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [rotation, setRotation] = useState(0);
-  const [velocity, setVelocity] = useState(0);
+  const rotationRef = useRef(0);
+  const animationRef = useRef<Animation | null>(null);
+  const spinningRef = useRef(false);
 
   const colors = ['#eff6ff', '#e0e7ff', '#f5f3ff', '#fae8ff'];
 
@@ -40,7 +42,7 @@ const Wheel: React.FC<WheelProps> = ({ items, onResult, isSpinning, setIsSpinnin
     const sliceAngle = (2 * Math.PI) / items.length;
 
     items.forEach((item, i) => {
-      const angle = rotation + i * sliceAngle;
+      const angle = i * sliceAngle;
       
       ctx.beginPath();
       ctx.moveTo(centerX, centerY);
@@ -78,70 +80,69 @@ const Wheel: React.FC<WheelProps> = ({ items, onResult, isSpinning, setIsSpinnin
     ctx.stroke();
 
     // On ne dessine plus le hub central dans le canvas car le bouton DOM va le remplacer
-  }, [items, rotation]);
+  }, [items]);
 
   useEffect(() => {
     draw();
+    let active = true;
+    void document.fonts.ready.then(() => { if (active) draw(); });
+    return () => { active = false; };
   }, [draw]);
 
-  useEffect(() => {
-    if (!isSpinning) return;
-
-    let currentRotation = rotation;
-    let currentVelocity = velocity;
-    const friction = 0.992;
-    let rafId: number;
-
-    const animate = () => {
-      currentRotation += currentVelocity;
-      currentVelocity *= friction;
-
-      if (currentVelocity < 0.0005) {
-        setIsSpinning(false);
-        const sliceAngle = (2 * Math.PI) / items.length;
-        const normalizedRotation = (2 * Math.PI - (currentRotation % (2 * Math.PI))) % (2 * Math.PI);
-        const selectedIndex = Math.floor(normalizedRotation / sliceAngle);
-        onResult(items[selectedIndex]);
-        return;
-      }
-
-      setRotation(currentRotation);
-      rafId = requestAnimationFrame(animate);
-    };
-
-    rafId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafId);
-  }, [isSpinning, items, onResult, setIsSpinning, velocity]);
+  useEffect(() => () => {
+    animationRef.current?.cancel();
+  }, []);
 
   const spin = () => {
-    if (isSpinning || items.length === 0) return;
-    const initialVelocity = 0.25 + Math.random() * 0.25;
-    setVelocity(initialVelocity);
+    const canvas = canvasRef.current;
+    if (!canvas || spinningRef.current || isSpinning || !items.length) return;
+    spinningRef.current = true;
     setIsSpinning(true);
+    const selectedIndex = Math.floor(Math.random() * items.length);
+    const result = items[selectedIndex];
+    const start = rotationRef.current;
+    const end = rotationForIndex(selectedIndex, items.length, start);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const animation = canvas.animate([
+      { transform: `rotate(${start}rad)` },
+      { transform: `rotate(${end}rad)` },
+    ], { duration: reducedMotion ? 1 : 4200, easing: 'cubic-bezier(0.12, 0.75, 0.15, 1)' });
+    animationRef.current = animation;
+    animation.onfinish = () => {
+      rotationRef.current = normalizeAngle(end);
+      canvas.style.transform = `rotate(${rotationRef.current}rad)`;
+      animationRef.current = null;
+      spinningRef.current = false;
+      setIsSpinning(false);
+      onResult(result);
+    };
   };
 
   return (
     <div className="flex flex-col items-center w-full max-w-4xl relative z-10">
       <div className="relative w-full aspect-square max-w-[650px] flex items-center justify-center">
         {/* Halo atmosphérique */}
-        <div className="absolute inset-0 bg-indigo-500/5 blur-[120px] rounded-full scale-150 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none"></div>
         
         <canvas 
+          role="img"
+          aria-label={`Roue de tirage au sort : ${items.length} standards disponibles. La sélection complète est accessible dans le mode Sélection.`}
           ref={canvasRef} 
           width={800} 
           height={800} 
-          className="relative w-full h-full rounded-full shadow-[0_30px_70px_rgba(0,0,0,0.08)] transition-transform duration-700"
+          className="relative w-full h-full rounded-full shadow-[0_30px_70px_rgba(0,0,0,0.08)] "
         />
         
         {/* Needle Indicator */}
-        <div className="absolute top-1/2 -right-6 -translate-y-1/2 z-10">
-            <div className="w-14 h-14 bg-indigo-600 rotate-45 rounded-md shadow-2xl border-8 border-white flex items-center justify-center">
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 z-10">
+            <div className="w-10 h-10 sm:w-14 sm:h-14 bg-indigo-600 rotate-45 rounded-md shadow-2xl border-4 sm:border-8 border-white flex items-center justify-center">
                <div className="w-2 h-2 bg-white rounded-full"></div>
             </div>
         </div>
 
         {/* Bouton Central GO */}
         <button
+          aria-label={isSpinning ? "Tirage en cours" : "Lancer la roue"}
           onClick={spin}
           disabled={isSpinning || items.length === 0}
           className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full font-black text-2xl shadow-[0_10px_30px_rgba(79,70,229,0.4)] transition-all transform active:scale-90 z-20 flex items-center justify-center border-4 border-white ${
@@ -150,9 +151,12 @@ const Wheel: React.FC<WheelProps> = ({ items, onResult, isSpinning, setIsSpinnin
             : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105'
           }`}
         >
-          {isSpinning ? '...' : 'GO'}
+          {isSpinning ? '…' : 'GO'}
         </button>
       </div>
+      <p role="status" className="mt-4 text-sm text-slate-600 text-center">
+        {isSpinning ? "Tirage en cours…" : items.length ? `${items.length} standards disponibles` : "Aucun standard ne correspond à vos filtres. Réinitialisez-les pour rejouer."}
+      </p>
     </div>
   );
 };

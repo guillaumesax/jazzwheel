@@ -1,20 +1,49 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Jazz Wheel Pro
 
-# Run and deploy your AI Studio app
+Application React/TypeScript pour choisir un standard de jazz par tirage au sort ou dans le répertoire, filtrer par style, tempo et complexité, puis afficher les gammes conseillées en tonalité concert et pour instruments en Bb / Eb.
 
-This contains everything you need to run your app locally.
+Projet importé de Google AI Studio, puis fiabilisé dans Codex. Les 19 standards et leur contenu musical d'origine sont conservés.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1T5dxNNI9qH9WDhkh6orxg0N5vefiZhig
+## Démarrer
 
-## Run Locally
+Node.js 22.12 ou supérieur est recommandé.
 
-**Prerequisites:**  Node.js
+```sh
+npm ci
+npm run dev
+```
 
+Ouvrir http://127.0.0.1:3000. Aucune clé API ni compte Google n'est nécessaire.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Vérifier et construire
+
+```sh
+npm run typecheck
+npm test
+npm run build
+npx playwright install chromium
+npm run test:e2e
+```
+
+Les tests navigateur vérifient la version construite, sur ordinateur et avec un viewport mobile de 375 px. Leur serveur utilise le port 4174 et peut fonctionner en parallèle du serveur de développement.
+
+```sh
+npm run preview
+```
+
+La commande affiche l'adresse de l'aperçu de production. Les fichiers publiables sont dans `dist/`. La publication est déclenchée par le workflow GitHub Pages de ce dépôt lors d’un push sur `main`. La version publique est accessible à https://guillaumesax.github.io/jazzwheel/.
+
+## Organisation
+
+- `data/tunes.ts` : répertoire, catégories et propositions de gammes.
+- `components/Wheel.tsx` : dessin de la roue et animation native du navigateur.
+- `components/ResultDialog.tsx` : fenêtre de résultat accessible au clavier.
+- `pages/` : choix du morceau et affichage des gammes.
+- `utils/` : transposition, filtres, stockage et calcul de rotation.
+- `tests/` : tests de logique et parcours navigateur.
+
+Les préférences restent sur l'appareil via `localStorage`. Si celui-ci est indisponible ou contient des données invalides, l'application reste utilisable. Les gammes d'un standard peuvent être ouvertes directement avec une URL telle que `/#standard/blue-bossa`.
+
+Tailwind est compilé dans le projet. La police Google Fonts est facultative : une police système prend le relais si elle ne charge pas. L'application n'utilise aucun service d'IA.
+
+Voir `REVIEW.md` pour le détail de cette première revue et les points à reprendre ultérieurement.

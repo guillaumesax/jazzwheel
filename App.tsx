@@ -1,51 +1,58 @@
-
-import React, { useState, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import WheelPage from './pages/WheelPage';
-import ScalesPage from './pages/ScalesPage';
-import { JazzStandard } from './types';
+import type { JazzStandard } from './types';
 import { JAZZ_STANDARDS } from './data/tunes';
+import { readStorage, writeStorage } from './utils/storage';
 
-const App: React.FC = () => {
-  const [selectedStandard, setSelectedStandard] = useState<JazzStandard | null>(null);
+const ScalesPage = lazy(() => import('./pages/ScalesPage'));
+const fromHash = () => JAZZ_STANDARDS.find(item => window.location.hash === `#standard/${item.id}`) ?? null;
+
+export default function App() {
+  const [selectedStandard, setSelectedStandard] = useState<JazzStandard | null>(() => {
+    if (window.location.hash) return fromHash();
+    return JAZZ_STANDARDS.find(item => item.id === readStorage('last_selected_id')) ?? null;
+  });
 
   useEffect(() => {
-    // Basic persistent storage for the current session's selected standard
-    const savedId = localStorage.getItem('last_selected_id');
-    if (savedId) {
-      const found = JAZZ_STANDARDS.find(s => s.id === savedId);
-      if (found) setSelectedStandard(found);
-    }
+    const update = () => {
+      const item = fromHash();
+      setSelectedStandard(item);
+      writeStorage('last_selected_id', item?.id ?? null);
+    };
+    window.addEventListener('hashchange', update);
+    return () => window.removeEventListener('hashchange', update);
   }, []);
 
+  useEffect(() => {
+    if (selectedStandard && !window.location.hash) {
+      window.history.replaceState(null, '', `#standard/${selectedStandard.id}`);
+    }
+  }, [selectedStandard]);
+
   const handleSelect = (item: JazzStandard) => {
+    writeStorage('last_selected_id', item.id);
+    window.location.hash = `standard/${item.id}`;
     setSelectedStandard(item);
-    localStorage.setItem('last_selected_id', item.id);
+    window.scrollTo(0, 0);
   };
 
   const handleBack = () => {
+    writeStorage('last_selected_id', null);
     setSelectedStandard(null);
-    localStorage.removeItem('last_selected_id');
+    window.location.hash = '';
+    requestAnimationFrame(() => document.querySelector<HTMLElement>('#wheel-title')?.focus());
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
-      {selectedStandard ? (
-        <ScalesPage item={selectedStandard} onBack={handleBack} />
-      ) : (
+    <div className="min-h-screen bg-slate-50">
+      <div hidden={selectedStandard !== null}>
         <WheelPage onSelect={handleSelect} />
+      </div>
+      {selectedStandard && (
+        <Suspense fallback={<p role="status" className="p-8 text-center">Chargement des gammes…</p>}>
+          <ScalesPage item={selectedStandard} onBack={handleBack} />
+        </Suspense>
       )}
-      
-      <style>{`
-        @keyframes bounce-short {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
-        }
-        .animate-bounce-short {
-          animation: bounce-short 2s infinite ease-in-out;
-        }
-      `}</style>
     </div>
   );
-};
-
-export default App;
+}

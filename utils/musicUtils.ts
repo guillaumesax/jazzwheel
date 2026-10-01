@@ -1,45 +1,30 @@
-
-import { AccidentalPreference } from '../types';
+import type { AccidentalPreference, ScaleRecommendation } from '../types';
 
 const NOTES_SHARP = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const NOTES_FLAT = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
-
-const FLAT_ROOTS = ['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'];
+const NATURAL_NOTES: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 
 export const getNoteIndex = (note: string): number => {
-  const sharpIndex = NOTES_SHARP.indexOf(note);
-  if (sharpIndex !== -1) return sharpIndex;
-  return NOTES_FLAT.indexOf(note);
+  const match = /^([A-G])([#b♯♭]?)$/.exec(note);
+  if (!match) return -1;
+  const accidental = match[2] === '#' || match[2] === '♯' ? 1 : match[2] ? -1 : 0;
+  return (NATURAL_NOTES[match[1]] + accidental + 12) % 12;
 };
 
-export const transposeNote = (
-  root: string, 
-  semitones: number, 
-  pref: AccidentalPreference
-): string => {
+export const transposeNote = (root: string, semitones: number, pref: AccidentalPreference): string => {
   const index = getNoteIndex(root);
-  if (index === -1) return root;
-
-  const newIndex = (index + semitones) % 12;
-  
-  let useFlats = false;
-  if (pref === 'b') {
-    useFlats = true;
-  } else if (pref === 'auto') {
-    // If we're transposing TO a flat-heavy key, use flats
-    // This is a simplification but works for our scope
-    const baseNote = NOTES_SHARP[newIndex];
-    if (FLAT_ROOTS.includes(baseNote) || (semitones === 2 && ['Bb', 'Eb', 'Ab'].includes(root))) {
-       useFlats = true;
-    }
-    // Specific common jazz keys
-    if (['F', 'Bb', 'Eb', 'Ab', 'C'].includes(NOTES_FLAT[newIndex])) useFlats = true;
-  }
-
-  return useFlats ? NOTES_FLAT[newIndex] : NOTES_SHARP[newIndex];
+  if (index === -1 || !Number.isInteger(semitones)) return root;
+  // Keep the source spelling in concert pitch unless explicitly overridden.
+  if (pref === 'auto' && semitones % 12 === 0) return root;
+  const newIndex = ((index + semitones) % 12 + 12) % 12;
+  const useFlats = pref === 'b' || (pref === 'auto' &&
+    (root.includes('b') || root.includes('♭') || [3, 8, 10].includes(newIndex)));
+  return (useFlats ? NOTES_FLAT : NOTES_SHARP)[newIndex];
 };
 
-export const formatScaleName = (root: string, type: string): string => {
-  const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
-  return `${root} ${capitalizedType}`;
+const SCALE_LABELS: Record<ScaleRecommendation['type'], string> = {
+  major: 'majeure', minor: 'mineure', dorian: 'dorienne', mixolydian: 'mixolydienne',
+  blues: 'blues', 'pentatonic major': 'pentatonique majeure', 'pentatonic minor': 'pentatonique mineure',
 };
+export const formatScaleName = (root: string, type: ScaleRecommendation['type']): string =>
+  `${root} ${SCALE_LABELS[type]}`;
