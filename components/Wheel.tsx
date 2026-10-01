@@ -60,8 +60,8 @@ const Wheel: React.FC<WheelProps> = ({ items, onResult, isSpinning, setIsSpinnin
       ctx.textAlign = 'right';
       ctx.fillStyle = '#1e1b4b';
       
-      let fontSize = 16;
-      if (items.length > 10) fontSize = 14;
+      let fontSize = 22;
+      if (items.length > 10) fontSize = 20;
       if (items.length > 20) fontSize = 12;
       if (items.length > 30) fontSize = 10;
       
@@ -120,7 +120,7 @@ const Wheel: React.FC<WheelProps> = ({ items, onResult, isSpinning, setIsSpinnin
 
   return (
     <div className="flex flex-col items-center w-full max-w-4xl relative z-10">
-      <div className="relative w-full aspect-square max-w-[650px] flex items-center justify-center">
+      <div className="wheel-frame relative w-full aspect-square max-w-[650px] flex items-center justify-center">
         {/* Halo atmosphérique */}
         <div className="absolute inset-0 bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none"></div>
         

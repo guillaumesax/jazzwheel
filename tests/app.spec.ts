@@ -62,7 +62,7 @@ test('spin locks filters, survives a parent update, and matches the pointer', as
   });
   const { JAZZ_STANDARDS } = await import('../data/tunes');
   expect(winner).toBe(JAZZ_STANDARDS[pointerIndex].title);
-  await expect(dialog.getByRole('button', { name: 'VOIR LES GAMMES' })).toBeFocused();
+  await expect(dialog.getByRole('button', { name: 'AFFICHER LA GRILLE ET LES GAMMES' })).toBeFocused();
   await noOverflow(page);
   await page.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
@@ -100,9 +100,12 @@ test('reduced motion gives an immediate result, including a single candidate', a
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible({ timeout: 1000 });
   await expect(dialog.getByRole('heading')).toHaveText('Mr PC');
-  await dialog.getByRole('button', { name: 'VOIR LES GAMMES' }).click();
+  await dialog.getByRole('button', { name: 'AFFICHER LA GRILLE ET LES GAMMES' }).click();
   await expect(page.getByRole('heading', { name: 'Mr PC', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Retour au répertoire' }).click();
+  await expect(page.locator('.projection__bar')).toHaveCount(12);
+  await expect(page.locator('.projection__scale')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Quitter le mode projection et revenir à la roue' }).click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Lancer la roue' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Bebop', exact: true })).toHaveAttribute('aria-pressed', 'true');
 });

@@ -27,7 +27,7 @@ export default function ResultDialog({ item, onSelect, onClose }: {
       <h2 id="result-title" className="text-4xl sm:text-6xl md:text-7xl font-black text-slate-900 mb-6 tracking-tight break-words">{item.title}</h2>
       <p className="text-slate-600 font-bold mb-8">{item.tags.styles.join(' • ')} • {item.tags.tempo}</p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <button onClick={onSelect} className="px-6 py-5 rounded-2xl bg-indigo-600 text-white font-black hover:bg-indigo-700">VOIR LES GAMMES</button>
+        <button onClick={onSelect} className="px-6 py-5 rounded-2xl bg-indigo-600 text-white font-black hover:bg-indigo-700">AFFICHER LA GRILLE ET LES GAMMES</button>
         <button onClick={onClose} className="px-6 py-5 rounded-2xl bg-slate-100 text-slate-700 font-black hover:bg-slate-200">REJOUER</button>
       </div>
     </dialog>, document.body,

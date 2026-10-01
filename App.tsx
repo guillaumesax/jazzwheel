@@ -11,7 +11,7 @@ const fromHash = () => JAZZ_STANDARDS.find(item => window.location.hash === `#st
 export default function App() {
   const [selectedStandard, setSelectedStandard] = useState<JazzStandard | null>(() => {
     if (window.location.hash) return fromHash();
-    return JAZZ_STANDARDS.find(item => item.id === readStorage('last_selected_id')) ?? null;
+    return null;
   });
   const [projection, setProjection] = useState(() => window.location.hash.startsWith('#projection/'));
 
@@ -39,9 +39,18 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
+  const handleWheelSelect = (item: JazzStandard) => {
+    writeStorage('last_selected_id', item.id);
+    window.location.hash = `projection/${item.id}`;
+    setSelectedStandard(item);
+    setProjection(true);
+    window.scrollTo(0, 0);
+  };
+
   const handleBack = () => {
     writeStorage('last_selected_id', null);
     setSelectedStandard(null);
+    setProjection(false);
     window.location.hash = '';
     requestAnimationFrame(() => document.querySelector<HTMLElement>('#wheel-title')?.focus());
   };
@@ -50,12 +59,6 @@ export default function App() {
     if (!selectedStandard) return;
     window.location.hash = `projection/${selectedStandard.id}`;
     setProjection(true);
-  };
-
-  const handleProjectionBack = () => {
-    if (!selectedStandard) return;
-    window.location.hash = `standard/${selectedStandard.id}`;
-    setProjection(false);
   };
 
   const handleProjectionSelect = (item: JazzStandard) => {
@@ -67,7 +70,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div hidden={selectedStandard !== null}>
-        <WheelPage onSelect={handleSelect} />
+        <WheelPage onSelect={handleSelect} onWheelSelect={handleWheelSelect} />
       </div>
       {selectedStandard && !projection && (
         <Suspense fallback={<p role="status" className="p-8 text-center">Chargement des gammes…</p>}>
@@ -76,7 +79,7 @@ export default function App() {
       )}
       {selectedStandard && projection && (
         <Suspense fallback={<p role="status" className="p-8 text-center">Chargement de la projection…</p>}>
-          <ProjectionPage item={selectedStandard} onBack={handleProjectionBack} onSelect={handleProjectionSelect} />
+          <ProjectionPage item={selectedStandard} onBack={handleBack} onSelect={handleProjectionSelect} />
         </Suspense>
       )}
     </div>

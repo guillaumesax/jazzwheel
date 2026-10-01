@@ -9,11 +9,12 @@ import ResultDialog from '../components/ResultDialog';
 
 interface WheelPageProps {
   onSelect: (item: JazzStandard) => void;
+  onWheelSelect: (item: JazzStandard) => void;
 }
 
 type Mode = 'wheel' | 'manual';
 
-const WheelPage: React.FC<WheelPageProps> = ({ onSelect }) => {
+const WheelPage: React.FC<WheelPageProps> = ({ onSelect, onWheelSelect }) => {
   const [mode, setMode] = useState<Mode>(() => {
     return readStorage('jazz_mode') === 'manual' ? 'manual' : 'wheel';
   });
@@ -65,7 +66,7 @@ const WheelPage: React.FC<WheelPageProps> = ({ onSelect }) => {
   const complexities = COMPLEXITIES;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 min-h-screen flex flex-col relative z-0">
+    <div className="wheel-page max-w-7xl mx-auto px-4 sm:px-6 py-8 min-h-screen flex flex-col relative z-0">
       <header className="flex flex-col items-center mb-8 text-center shrink-0 relative z-50">
         <div className="mb-2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-[10px] font-black uppercase tracking-widest">
             <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
@@ -191,7 +192,7 @@ const WheelPage: React.FC<WheelPageProps> = ({ onSelect }) => {
             {showVictory && lastResult && (
               <ResultDialog item={lastResult} onSelect={() => {
                 setShowVictory(false);
-                onSelect(lastResult);
+                onWheelSelect(lastResult);
               }} onClose={() => { setShowVictory(false); setLastResult(null); }} />
             )}
           </div>
@@ -245,7 +246,7 @@ const WheelPage: React.FC<WheelPageProps> = ({ onSelect }) => {
       </main>
       
       <footer className="mt-8 text-center text-[10px] font-bold text-slate-500 uppercase tracking-widest py-4 shrink-0 relative z-10">
-         Conservatoire de Montélimar • Jazz Wheel Pro v2.1
+         Conservatoire de Montélimar • Jazz Wheel Pro
       </footer>
     </div>
   );
