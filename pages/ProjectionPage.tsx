@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { AccidentalPreference, JazzStandard } from '../types';
 import { CHARTS } from '../data/charts';
 import { SCALE_LINKS, type ScaleLink } from '../data/scaleLinks';
+import { SCALE_CUES } from '../data/scaleCues';
 import { JAZZ_STANDARDS } from '../data/tunes';
 import { formatFrenchNote, formatScaleName, scaleNotes, transposeChord, transposeNote } from '../utils/musicUtils';
 import { readStorage, writeStorage } from '../utils/storage';
@@ -111,8 +112,11 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
             const sameScale = links.every(link => link === links[0]) ? links[0] : null;
             const markers = scaleMarkers(links);
             const scaleDescription = links.map(link => link === null ? 'notes de l’accord' : `gamme ${link + 1}`).join(', puis ');
-            return <div className={`projection__bar ${section !== previous ? 'projection__bar--section' : ''}`} data-scale={sameScale ?? 'none'} role="group" aria-label={`Mesure ${index + 1} : ${chords.join(', puis ')} ; ${scaleDescription}`} key={index}>
-              <div className="projection__bar-meta"><span>{String(index + 1).padStart(2, '0')}</span>{section !== previous && <b>{section}</b>}<span className="projection__scale-markers" aria-hidden="true">{markers.map((link, markerIndex) => <span className="projection__scale-marker-part" key={markerIndex}>{markerIndex > 0 && <span className="projection__scale-arrow">›</span>}<span className="projection__scale-marker" data-scale={link ?? 'none'}>{link === null ? '·' : link + 1}</span></span>)}</span></div>
+            const targetNotes = SCALE_CUES[item.id]?.[index + 1]?.map(note =>
+              transposeNote(note, shift, pref === 'auto' && note.includes('#') ? '#' : pref)) ?? [];
+            const targetDescription = targetNotes.length ? ` ; notes-cibles de l’accord : ${targetNotes.map(formatFrenchNote).join(', ')}` : '';
+            return <div className={`projection__bar ${section !== previous ? 'projection__bar--section' : ''}`} data-scale={sameScale ?? 'none'} role="group" aria-label={`Mesure ${index + 1} : ${chords.join(', puis ')} ; ${scaleDescription}${targetDescription}`} key={index}>
+              <div className="projection__bar-meta"><span>{String(index + 1).padStart(2, '0')}</span>{section !== previous && <b>{section}</b>}{targetNotes.length > 0 && <span className="projection__target-note" title="Note-cible de l’accord, hors de la gamme repère" aria-label={`Note-cible : ${targetNotes.map(formatFrenchNote).join(', ')}`}>+{targetNotes.join(' / ')}</span>}<span className="projection__scale-markers" aria-hidden="true">{markers.map((link, markerIndex) => <span className="projection__scale-marker-part" key={markerIndex}>{markerIndex > 0 && <span className="projection__scale-arrow">›</span>}<span className="projection__scale-marker" data-scale={link ?? 'none'}>{link === null ? '·' : link + 1}</span></span>)}</span></div>
               <div className={`projection__chords ${chords.length > 1 ? 'projection__chords--split' : ''}`}>
                 {chords.map((chord, chordIndex) => <span className="projection__chord" data-scale={links[chordIndex] ?? 'none'} key={chordIndex}>{chord}</span>)}
               </div>
@@ -123,7 +127,7 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
 
       <section className="projection__scales" aria-label="Modes, gammes et notes à jouer">
         <div className="projection__panel-title"><h2>À JOUER</h2><span>MÊME COULEUR + N° · {pitchInfo.label.toUpperCase()}</span></div>
-        <p className="projection__play-tip">Une couleur = une phrase. Visez les 3es et 7es des accords.</p>
+        <p className="projection__play-tip">Une couleur = une gamme · + = note-cible hors gamme · visez les 3es et 7es.</p>
         <div className={`projection__scale-list ${item.recommendedScales.length === 1 ? 'projection__scale-list--single' : ''}`} style={{ '--scale-count': item.recommendedScales.length } as React.CSSProperties}>
           {item.recommendedScales.map((scale, index) => {
             const root = transposeNote(scale.root, pitchInfo.shift, pref);

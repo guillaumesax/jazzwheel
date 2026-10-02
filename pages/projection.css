@@ -38,6 +38,7 @@
 .projection__bar--section { border-left:4px solid var(--accent); }
 .projection__bar-meta { display:flex; align-items:center; gap:4px; color:var(--muted); font-size:clamp(11px,.7vw,14px); font-weight:800; line-height:1; }
 .projection__bar-meta b { color:var(--accent); }
+.projection__target-note { color:#101b28; background:#ffd37b; border-radius:3px; padding:2px 4px; font-size:clamp(10px,.66vw,13px); font-weight:900; letter-spacing:0; white-space:nowrap; }
 .projection__scale-markers,.projection__scale-marker-part { display:flex; align-items:center; gap:2px; }
 .projection__scale-markers { margin-left:auto; white-space:nowrap; }
 .projection__scale-arrow { color:var(--muted); }
