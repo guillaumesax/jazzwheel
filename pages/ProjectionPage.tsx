@@ -74,7 +74,7 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
       <div className="projection__identity">
         <button className="projection__back" onClick={onBack} aria-label="Quitter le mode projection et revenir à la roue">← <span>La roue</span></button>
         <div className="projection__title-block">
-          <div className="projection__eyebrow">JAM SESSION <span aria-hidden="true">/</span> {count} MESURES</div>
+          <div className="projection__eyebrow">VERSION 3 <span aria-hidden="true">/</span> {count} MESURES</div>
           <h1 ref={heading} tabIndex={-1}>{item.title}</h1>
         </div>
       </div>

@@ -69,7 +69,7 @@ const WheelPage: React.FC<WheelPageProps> = ({ onSelect }) => {
       <header className="flex flex-col items-center mb-8 text-center shrink-0 relative z-50">
         <div className="mb-2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-[10px] font-black uppercase tracking-widest">
             <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
-            Jazz Wheel Pro
+            Jazz Wheel Pro · Version 3
         </div>
         <h1 id="wheel-title" tabIndex={-1} className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-2">
             Prêt pour la <span className="text-indigo-600">JAM session ?</span>
