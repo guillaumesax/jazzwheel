@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import type { AccidentalPreference, JazzStandard } from '../types';
 import { CHARTS } from '../data/charts';
 import { SCALE_LINKS, type ScaleLink } from '../data/scaleLinks';
@@ -9,11 +10,12 @@ import { readStorage, writeStorage } from '../utils/storage';
 import './projection.css';
 
 type Pitch = 'concert' | 'bb' | 'eb';
-const PITCHES: { value: Pitch; label: string; description: string; shift: number }[] = [
-  { value: 'concert', label: 'Concert', description: 'piano · guitare · basse', shift: 0 },
-  { value: 'bb', label: 'Si♭', description: 'ténor · soprano · trompette', shift: 2 },
-  { value: 'eb', label: 'Mi♭', description: 'alto · baryton', shift: 9 },
+const PITCHES: { value: Pitch; label: string; notation: string; description: string; shift: number }[] = [
+  { value: 'concert', label: 'Concert', notation: 'C', description: 'piano · guitare · basse', shift: 0 },
+  { value: 'bb', label: 'Si♭', notation: 'Bb', description: 'ténor · soprano · trompette', shift: 2 },
+  { value: 'eb', label: 'Mi♭', notation: 'Eb', description: 'alto · baryton', shift: 9 },
 ];
+const PUBLIC_URL = 'https://guillaumesax.github.io/jazzwheel/';
 
 const sectionFor = (id: string, bar: number, count: number): string => {
   if (id === 'so-what') return bar < 16 ? 'A · 16' : bar < 24 ? 'B · 8' : 'A · 8';
@@ -45,10 +47,12 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
     return saved === '#' || saved === 'b' ? saved : 'auto';
   });
   const heading = useRef<HTMLHeadingElement>(null);
+  const shareDialog = useRef<HTMLDialogElement>(null);
   const chart = CHARTS[item.id];
   const pitchInfo = PITCHES.find(p => p.value === pitch)!;
   const shift = pitchInfo.shift;
   const count = chart?.bars.length ?? 0;
+  const shareUrl = `${PUBLIC_URL}#projection/${item.id}`;
 
   useEffect(() => { heading.current?.focus(); }, [item.id]);
   useEffect(() => { writeStorage('projection_pitch', pitch); }, [pitch]);
@@ -83,16 +87,30 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
             {JAZZ_STANDARDS.map(tune => <option key={tune.id} value={tune.id}>{tune.title}</option>)}
           </select>
         </label>
+        <button className="projection__share" type="button" onClick={() => shareDialog.current?.showModal()} aria-label={`Afficher le QR code de ${item.title} pour les musiciens`} aria-haspopup="dialog" title="Scanner pour ouvrir ce morceau sur son téléphone">
+          <QRCodeSVG value={shareUrl} size={70} level="M" marginSize={4} bgColor="#ffffff" fgColor="#171a36" aria-hidden="true" />
+          <span>SCANNE</span>
+        </button>
         <div className="projection__key">
           <span>GAMME REPÈRE · {pitchInfo.label.toUpperCase()}</span>
           <strong>{transposeNote(item.recommendedScales[0].root, pitchInfo.shift, pref)}</strong>
         </div>
       </div>
     </header>
+    <dialog ref={shareDialog} className="projection__share-dialog" aria-label={`QR code de ${item.title}`} onClick={event => { if (event.target === shareDialog.current) shareDialog.current.close(); }}>
+      <div className="projection__share-dialog-content">
+        <p className="projection__share-kicker">SUR TON TÉLÉPHONE</p>
+        <h2>{item.title}</h2>
+        <p>Scanne, puis choisis ta tonalité : C, Bb ou Eb.</p>
+        <QRCodeSVG value={shareUrl} size={260} level="M" marginSize={4} bgColor="#ffffff" fgColor="#171a36" title={`Lien vers ${item.title}`} />
+        <a href={shareUrl} target="_blank" rel="noopener noreferrer">Ouvrir le morceau ↗</a>
+        <form method="dialog"><button type="submit">Fermer</button></form>
+      </div>
+    </dialog>
 
     <div className="projection__toolbar">
       <div className="projection__pitch" role="group" aria-label="Transposition de la grille et des gammes">
-        {PITCHES.map(option => <button key={option.value} aria-pressed={pitch === option.value} onClick={() => setPitch(option.value)} title={option.description}>{option.label}</button>)}
+        {PITCHES.map(option => <button key={option.value} aria-label={option.label} aria-pressed={pitch === option.value} onClick={() => setPitch(option.value)} title={option.description}><span>{option.label}</span><small aria-hidden="true">{option.notation}</small></button>)}
       </div>
       <div className="projection__instrument">{pitchInfo.description}</div>
       <div className="projection__pref" role="group" aria-label="Altérations">

@@ -2,6 +2,8 @@
 
 Le parcours principal reste celui de la roue de la fortune : **lancer la roue → découvrir le standard gagnant → afficher sa grille et ses gammes en projection → revenir à la roue pour rejouer**. L'onglet **Sélection** ouvre exactement la même vue projection après le choix manuel d'un morceau. Les anciens liens `/#standard/...` ouvrent aussi la vue projection ; les liens directs `/#projection/...` restent possibles. Le sélecteur en haut change de morceau sans quitter la projection. Les touches `1`, `2`, `3` choisissent respectivement concert, si♭ et mi♭ ; `Échap` revient à la roue. Le choix des altérations et de la transposition est mémorisé localement.
 
+Chaque morceau affiche un QR code dans son en-tête. Il pointe vers son lien public direct `https://guillaumesax.github.io/jazzwheel/#projection/<identifiant>`, même si la projection est ouverte depuis un serveur local. Un clic agrandit le code pour le scanner à distance. Chaque téléphone ouvre la même grille et choisit indépendamment sa transposition C (concert), Bb (si♭) ou Eb (mi♭) ; ce choix est mémorisé sur l'appareil.
+
 ## Composition de l'écran
 
 - Une seule page paysage : titre et gamme repère en haut, grille complète à gauche, modes/gammes et notes à droite. Les accords **et** les gammes suivent le même instrument.

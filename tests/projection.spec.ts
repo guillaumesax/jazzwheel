@@ -26,6 +26,34 @@ test('legacy standard links open the projection layout', async ({ page }) => {
   await expect(page.locator('.projection__bar')).toHaveCount(16);
 });
 
+test('each QR code opens its own tune and the musician can transpose independently', async ({ page, browser }) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto('/#projection/blue-bossa');
+  await page.getByRole('button', { name: 'Afficher le QR code de Blue Bossa pour les musiciens' }).click();
+  const dialog = page.getByRole('dialog', { name: 'QR code de Blue Bossa' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('svg path').first()).toBeVisible();
+  const link = dialog.getByRole('link', { name: 'Ouvrir le morceau' });
+  await expect(link).toHaveAttribute('href', 'https://guillaumesax.github.io/jazzwheel/#projection/blue-bossa');
+  const musician = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  try {
+    const phone = await musician.newPage();
+    await phone.goto('/#projection/blue-bossa');
+    await expect(phone.locator('.projection__bar').first()).toContainText('Cm');
+    await phone.getByRole('button', { name: 'Si♭' }).click();
+    await expect(phone.locator('.projection__bar').first()).toContainText('Dm');
+    await phone.getByRole('button', { name: 'Mi♭' }).click();
+    await expect(phone.locator('.projection__bar').first()).toContainText('Am');
+    await expect(page.locator('.projection__bar').first()).toContainText('Cm');
+  } finally {
+    await musician.close();
+  }
+  await dialog.getByRole('button', { name: 'Fermer' }).click();
+  await page.getByLabel('MORCEAU').selectOption('autumn-leaves');
+  await page.getByRole('button', { name: 'Afficher le QR code de Autumn Leaves pour les musiciens' }).click();
+  await expect(page.getByRole('dialog', { name: 'QR code de Autumn Leaves' }).getByRole('link', { name: 'Ouvrir le morceau' })).toHaveAttribute('href', 'https://guillaumesax.github.io/jazzwheel/#projection/autumn-leaves');
+});
+
 test('every chart fits both landscape projector sizes', async ({ page }) => {
   for (const viewport of [{ width: 1920, height: 1080 }, { width: 1366, height: 768 }]) {
     await page.setViewportSize(viewport);

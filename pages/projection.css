@@ -50,6 +50,26 @@
   padding:8px 28px 8px 12px; width:clamp(175px,16vw,300px);
   font-size:clamp(13px,.9vw,17px); letter-spacing:0; font-weight:800;
 }
+.projection__share {
+  flex:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+  width:82px; padding:4px; border:1px solid #c7d2fe; border-radius:18px;
+  background:#fff; box-shadow:0 5px 14px rgba(55,48,163,.1);
+}
+.projection__share:hover { background:#eef2ff; }
+.projection__share svg { display:block; width:70px; height:70px; }
+.projection__share span { color:#4338ca; font-size:10px; font-weight:900; letter-spacing:.09em; line-height:1.1; }
+.projection__share-dialog { position:fixed; inset:0; max-width:min(420px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); margin:auto; padding:0; border:1px solid #c7d2fe; border-radius:26px; background:#fff; color:#202449; box-shadow:0 30px 90px rgba(32,36,73,.28); }
+.projection__share-dialog::backdrop { background:rgba(20,24,52,.68); }
+.projection__share-dialog-content { display:flex; flex-direction:column; align-items:center; gap:13px; padding:27px; text-align:center; font-family:'Plus Jakarta Sans',system-ui,sans-serif; }
+.projection__share-kicker { color:#4338ca; font-size:12px; font-weight:900; letter-spacing:.12em; }
+.projection__share-dialog h2 { font-size:clamp(27px,6vw,38px); font-weight:900; line-height:1.1; }
+.projection__share-dialog p:not(.projection__share-kicker) { color:#475569; font-size:16px; font-weight:750; line-height:1.4; }
+.projection__share-dialog svg { display:block; width:min(260px,70vw); height:min(260px,70vw); }
+.projection__share-dialog a { color:#4338ca; font-weight:850; overflow-wrap:anywhere; }
+.projection__share-dialog form { width:100%; }
+.projection__share-dialog button { width:100%; min-height:48px; border:0; border-radius:999px; color:#fff; background:#4f46e5; font-size:16px; font-weight:900; cursor:pointer; }
+.projection__share-dialog button:hover { background:#4338ca; }
+.projection__share-dialog a:focus-visible,.projection__share-dialog button:focus-visible { outline:3px solid #4f46e5; outline-offset:3px; }
 .projection__key {
   min-width:104px; display:flex; flex-direction:column; align-items:flex-end; line-height:1;
   padding:9px 14px; border-radius:19px; background:linear-gradient(135deg,#4f46e5,#7c3aed);
@@ -60,6 +80,8 @@
 .projection__toolbar { display:flex; align-items:center; gap:15px; min-height:48px; }
 .projection__pitch,.projection__pref { display:flex; gap:3px; padding:4px; background:#fff; border:1px solid #dce2f4; border-radius:999px; box-shadow:0 4px 12px rgba(55,48,163,.07); }
 .projection__pitch button,.projection__pref button { border:0; background:transparent; border-radius:999px; padding:0 16px; min-height:42px; font-size:clamp(14px,1.05vw,18px); font-weight:900; transition:background .2s,color .2s; }
+.projection__pitch button { display:flex; align-items:center; gap:5px; }
+.projection__pitch button small { font-size:10px; font-weight:900; opacity:.8; }
 .projection__pitch button:hover,.projection__pref button:hover { background:#eef2ff; }
 .projection__pitch button[aria-pressed=true],.projection__pref button[aria-pressed=true] { color:#fff; background:#4f46e5; box-shadow:0 3px 9px rgba(79,70,229,.22); }
 .projection__instrument { color:#475569; font-weight:750; font-size:clamp(12px,.9vw,17px); }
@@ -120,6 +142,7 @@
 @media (max-width:1450px) { .projection__body { grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); } .projection__chords--split { letter-spacing:-.065em; } }
 @media (max-width:1000px), (max-height:650px) { .projection { height:auto; min-height:100dvh; overflow:auto; } .projection__header { flex-wrap:wrap; } .projection__body { grid-template-columns:1fr; } .projection__bars { grid-template-rows:none; grid-auto-rows:minmax(70px,1fr); } .projection__scale-list { grid-template-rows:none; } .projection__scale { min-height:90px; } }
 @media (max-width:700px) {
+  .projection__share { display:none; }
   .projection__header-right { width:100%; gap:9px; justify-content:space-between; }
   .projection__tune-picker { flex:1; min-width:0; }
   .projection__tune-picker select { width:100%; }
