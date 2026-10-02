@@ -15,7 +15,7 @@ test('manual selection, transposition, reload and browser navigation', async ({ 
   await expect(page.getByRole('heading', { name: 'Blue Bossa', exact: true })).toBeVisible();
   await expect(page.locator('.projection__bar')).toHaveCount(16);
   await expect(page.getByText('Db majeur', { exact: true })).toBeVisible();
-  await expect(page.getByText('D locrien', { exact: true })).toBeVisible();
+  await expect(page.getByText('C mineur harmonique', { exact: true })).toBeVisible();
   await noOverflow(page);
   await page.getByRole('button', { name: 'Dièses' }).click();
   await expect(page.getByText('C# majeur', { exact: true })).toBeVisible();

@@ -6,7 +6,7 @@ export type AccidentalPreference = '#' | 'b' | 'auto';
 
 export interface ScaleRecommendation {
   root: string; // The note in Concert key (e.g., 'C', 'Eb')
-  type: 'major' | 'dorian' | 'mixolydian' | 'minor' | 'melodic minor' | 'blues' | 'pentatonic major' | 'pentatonic minor' | 'locrian' | 'phrygian dominant' | 'altered' | 'lydian dominant';
+  type: 'major' | 'dorian' | 'mixolydian' | 'minor' | 'harmonic minor' | 'melodic minor' | 'blues' | 'pentatonic major' | 'pentatonic minor' | 'locrian' | 'phrygian dominant' | 'altered' | 'lydian dominant';
   reason: string;
 }
 

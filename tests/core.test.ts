@@ -30,7 +30,9 @@ describe('transposition', () => {
     expect(scaleNotes('G', 'altered')).toEqual(['G', 'Ab', 'Bb', 'B', 'Db', 'Eb', 'F']);
     expect(scaleNotes('Db', 'lydian dominant')).toEqual(['Db', 'Eb', 'F', 'G', 'Ab', 'Bb', 'Cb']);
     expect(scaleNotes('C', 'blues')).toEqual(['C', 'Eb', 'F', 'Gb', 'G', 'Bb']);
+    expect(scaleNotes('F', 'blues')).toEqual(['F', 'Ab', 'Bb', 'B', 'C', 'Eb']);
     expect(scaleNotes('D', 'melodic minor')).toEqual(['D', 'E', 'F', 'G', 'A', 'B', 'C#']);
+    expect(scaleNotes('D', 'harmonic minor')).toEqual(['D', 'E', 'F', 'G', 'A', 'Bb', 'C#']);
   });
   it('renders the same pitches with French note names', () => {
     expect(scaleNotes('Ab', 'major').map(formatFrenchNote)).toEqual(['Lab', 'Sib', 'Do', 'Réb', 'Mib', 'Fa', 'Sol']);
@@ -111,6 +113,16 @@ describe('wheel result', () => {
         }
       });
       expect(used.size, `${tune.id} unused scale card`).toBe(tune.recommendedScales.length);
+    }
+  });
+  it('uses one tonal center across ordinary cadences and one blues color across blues forms', () => {
+    expect(SCALE_LINKS['blue-bossa'].slice(8, 12)).toEqual([2, 2, 2, 2]);
+    expect(SCALE_LINKS['nature-boy'][1]).toBe(2); // Em7b5–A7, one D harmonic minor phrase
+    expect(SCALE_LINKS['autumn-leaves'].slice(0, 4)).toEqual([0, 0, 0, 0]);
+    expect(SCALE_LINKS['beautiful-love'].slice(4, 7)).toEqual([0, 0, 0]); // Gm–C7–F
+    for (const id of ['cantaloupe-island', 'footprints', 'mr-pc', 'watermelon-man']) {
+      expect(JAZZ_STANDARDS.find(tune => tune.id === id)?.recommendedScales).toHaveLength(1);
+      expect(new Set(SCALE_LINKS[id])).toEqual(new Set([0]));
     }
   });
 });

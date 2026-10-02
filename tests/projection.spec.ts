@@ -77,15 +77,25 @@ test('measure colors and numbers identify the same scale through a phrase and af
   await expect(firstScale).toHaveAttribute('data-scale', '0');
 });
 
-test('a measure with two harmonic choices shows both scale references', async ({ page }) => {
+test('minor ii–V shares a reference while genuine within-bar changes remain distinct', async ({ page }) => {
   await page.goto('/#projection/nature-boy');
-  const bar = page.locator('.projection__bar').nth(1);
-  await expect(bar.locator('.projection__chord')).toHaveCount(2);
-  await expect(bar.locator('.projection__chord').nth(0)).toHaveAttribute('data-scale', '2');
-  await expect(bar.locator('.projection__chord').nth(1)).toHaveAttribute('data-scale', '3');
-  await expect(bar.locator('.projection__scale-marker').nth(0)).toHaveText('3');
-  await expect(bar.locator('.projection__scale-marker').nth(1)).toHaveText('4');
-  await expect(page.locator('.projection__bar').nth(27)).toHaveAttribute('data-scale', 'none');
+  const cadence = page.locator('.projection__bar').nth(1);
+  await expect(cadence.locator('.projection__chord')).toHaveCount(2);
+  await expect(cadence).toHaveAttribute('data-scale', '2');
+  await expect(cadence.locator('.projection__scale-marker')).toHaveCount(1);
+  const change = page.locator('.projection__bar').nth(4);
+  await expect(change.locator('.projection__chord').nth(0)).toHaveAttribute('data-scale', '0');
+  await expect(change.locator('.projection__chord').nth(1)).toHaveAttribute('data-scale', '1');
+  await expect(change.locator('.projection__scale-marker').nth(0)).toHaveText('1');
+  await expect(change.locator('.projection__scale-marker').nth(1)).toHaveText('2');
+});
+
+test('a major ii–V–I is one color and one visible scale card', async ({ page }) => {
+  await page.goto('/#projection/blue-bossa');
+  const bars = page.locator('.projection__bar');
+  for (let index = 8; index < 12; index++) await expect(bars.nth(index)).toHaveAttribute('data-scale', '2');
+  await expect(page.locator('.projection__scale')).toHaveCount(3);
+  await expect(page.locator('.projection__scale').nth(2)).toContainText('Db majeur');
 });
 
 test('projection transposes chart and notes together and retains selection', async ({ page }) => {

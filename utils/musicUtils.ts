@@ -23,7 +23,7 @@ export const transposeNote = (root: string, semitones: number, pref: AccidentalP
 };
 
 const SCALE_LABELS: Record<ScaleRecommendation['type'], string> = {
-  major: 'majeur', minor: 'mineur naturel', 'melodic minor': 'mineur mélodique', dorian: 'dorien', mixolydian: 'mixolydien',
+  major: 'majeur', minor: 'mineur naturel', 'harmonic minor': 'mineur harmonique', 'melodic minor': 'mineur mélodique', dorian: 'dorien', mixolydian: 'mixolydien',
   blues: 'blues', 'pentatonic major': 'pentatonique majeure', 'pentatonic minor': 'pentatonique mineure',
   locrian: 'locrien', 'phrygian dominant': 'phrygien dominant',
   altered: 'altéré',
@@ -36,6 +36,7 @@ type Degree = readonly [number, number];
 const SCALE_DEGREES: Record<ScaleRecommendation['type'], readonly Degree[]> = {
   major: [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]],
   minor: [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, -1], [7, -1]],
+  'harmonic minor': [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, -1], [7, 0]],
   'melodic minor': [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, 0], [7, 0]],
   dorian: [[1, 0], [2, 0], [3, -1], [4, 0], [5, 0], [6, 0], [7, -1]],
   mixolydian: [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, -1]],
@@ -60,6 +61,15 @@ export function scaleNotes(root: string, type: ScaleRecommendation['type']): str
     const target = (rootPitch + MAJOR_STEPS[degree - 1] + alteration + 12) % 12;
     let difference = (target - NATURAL_NOTES[letter] + 12) % 12;
     if (difference > 6) difference -= 12;
+    // The blue note is conventionally written as #4 when b5 would spell an
+    // awkward Cb/Fb or a double flat (for example B rather than Cb in F blues).
+    if (type === 'blues' && degree === 5 && alteration === -1 &&
+      (['C', 'F'].includes(letter) || difference < -1)) {
+      const fourth = LETTERS[(rootLetter + 3) % 7];
+      let fourthDifference = (target - NATURAL_NOTES[fourth] + 12) % 12;
+      if (fourthDifference > 6) fourthDifference -= 12;
+      return fourth + (fourthDifference === 0 ? '' : fourthDifference > 0 ? '#'.repeat(fourthDifference) : 'b'.repeat(-fourthDifference));
+    }
     return letter + (difference === 0 ? '' : difference > 0 ? '#'.repeat(difference) : 'b'.repeat(-difference));
   });
 }

@@ -123,7 +123,8 @@ export default function ProjectionPage({ item, onBack, onSelect }: Props) {
 
       <section className="projection__scales" aria-label="Modes, gammes et notes à jouer">
         <div className="projection__panel-title"><h2>À JOUER</h2><span>MÊME COULEUR + N° · {pitchInfo.label.toUpperCase()}</span></div>
-        <div className="projection__scale-list" style={{ '--scale-count': item.recommendedScales.length } as React.CSSProperties}>
+        <p className="projection__play-tip">Une couleur = une phrase. Visez les 3es et 7es des accords.</p>
+        <div className={`projection__scale-list ${item.recommendedScales.length === 1 ? 'projection__scale-list--single' : ''}`} style={{ '--scale-count': item.recommendedScales.length } as React.CSSProperties}>
           {item.recommendedScales.map((scale, index) => {
             const root = transposeNote(scale.root, pitchInfo.shift, pref);
             const notes = scaleNotes(root, scale.type);
